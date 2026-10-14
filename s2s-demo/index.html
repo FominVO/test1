@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Тест мовлення в мовлення</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2310140f'/%3E%3Cpath d='M8 18h3l5 6V8l-5 6H8z' fill='%23d6f27c'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="top">
+    <div>
+      <p class="eyebrow">Artificial Analysis · Speech to Speech</p>
+      <h1>Тест голосових моделей</h1>
+      <p class="lede">Статична сторінка без сервера. Ключі лишаються в цьому браузері й відправляються лише до xAI, OpenAI та Google.</p>
+    </div>
+    <button id="settings-toggle" class="ghost" type="button" aria-expanded="false" aria-controls="settings">⚙️ Налаштування</button>
+  </header>
+
+  <section id="settings" class="panel" hidden>
+    <div class="panel-head">
+      <h2>Налаштування</h2>
+      <p>Поля зберігаються в <code>localStorage</code> цього браузера. Кнопка нижче стирає лише ключі.</p>
+    </div>
+    <div class="keys">
+      <label>Ключ xAI
+        <input id="key-xai" type="password" autocomplete="off" spellcheck="false" placeholder="xai-…">
+      </label>
+      <label>Ключ OpenAI
+        <input id="key-openai" type="password" autocomplete="off" spellcheck="false" placeholder="sk-…">
+      </label>
+      <label>Ключ Gemini
+        <input id="key-gemini" type="password" autocomplete="off" spellcheck="false" placeholder="AIza…">
+      </label>
+    </div>
+    <div class="key-actions">
+      <button id="toggle-keys" class="ghost" type="button">Показати ключі</button>
+      <button id="clear-keys" class="danger" type="button">Очистити ключі</button>
+    </div>
+    <label class="block">Інструкція для моделей
+      <textarea id="instructions" rows="3"></textarea>
+    </label>
+    <label class="block">WebSocket Gemini
+      <select id="gemini-ws"></select>
+    </label>
+    <p class="hint">Якщо браузер заблокує відповідь, картка моделі покаже помилку CORS або код WebSocket. Ідентифікатори моделей можна змінити прямо на картках.</p>
+  </section>
+
+  <section>
+    <div class="section-title">
+      <h2>Моделі</h2>
+      <p>Оберіть картку для розмови або запишіть одну фразу й відтворіть її всім моделям, у яких є ключ.</p>
+    </div>
+    <div id="models" class="grid"></div>
+  </section>
+
+  <section class="controls">
+    <button id="mic" type="button">🎤 Утримуйте і говоріть</button>
+    <button id="cmp" class="compare" type="button">🔁 Порівняти: один запит → усі моделі з ключем</button>
+    <button id="cancel" class="ghost" type="button" hidden>Скасувати</button>
+    <p id="status" role="status">Оберіть модель</p>
+    <div class="meter" aria-hidden="true"><span id="level"></span></div>
+  </section>
+  <p class="hint">Затримка — час від відпускання кнопки (кінець фрази) до першого нетихого звуку відповіді. Для WebRTC запис у порівнянні грає в реальному часі, відлік починається, коли він дограє.</p>
+
+  <section class="split">
+    <div>
+      <h2>Відповідь</h2>
+      <div id="log" class="log">Тут з’явиться розшифровка.</div>
+    </div>
+    <div>
+      <h2>Результати цього сеансу</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Модель</th>
+              <th>Індекс AA</th>
+              <th>TTFA AA, с</th>
+              <th>Виміряно, с</th>
+              <th>Ціна</th>
+              <th>Текст відповіді</th>
+            </tr>
+          </thead>
+          <tbody id="res"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">
+      <h2>Індекс Speech-to-Speech</h2>
+      <p>Цифри з <a href="https://artificialanalysis.ai/speech-to-speech">artificialanalysis.ai/speech-to-speech</a>. Grok Voice 3.0 — 86.9 за анонсом xAI із посиланням на той самий індекс (жовтень 2026).</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Місце</th>
+            <th>Модель</th>
+            <th>Провайдер</th>
+            <th>Індекс</th>
+            <th>TTFA, с</th>
+            <th>Ціна вхідного аудіо</th>
+          </tr>
+        </thead>
+        <tbody id="aa"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p>Демо не має бекенда. Ключ Gemini передається в URL WebSocket так, як вимагає Live API; ключі xAI та OpenAI йдуть у заголовку або підпротоколі лише на їхні хости.</p>
+  </footer>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
