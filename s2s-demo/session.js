@@ -267,7 +267,7 @@ function openXaiSocket(ctl, modelId, token, opts, handleClassified, markUtteranc
     };
     let ackTimer = 0;
     ws.onopen = () => {
-      sendJson(ws, xaiSessionUpdate(opts.instructions));
+      sendJson(ws, xaiSessionUpdate(opts.instructions, opts.voice));
       ackTimer = setTimeout(() => {
         if (!settled) {
           settled = true;
@@ -426,6 +426,7 @@ async function openOpenAIWebRTC(ctl, model, opts, handleClassified, markUtteranc
     instructions: opts.instructions,
     backend: model.backend,
     effort: model.effort,
+    voice: opts.voice,
     sdp,
   }));
   const answer = result && result.transport && result.transport.sdp;
@@ -521,6 +522,7 @@ function openOpenAIWebSocket(ctl, model, opts, handleClassified, markUtteranceCl
         instructions: opts.instructions,
         backend: model.backend,
         effort: model.effort,
+        voice: opts.voice,
       }));
     };
     ws.onmessage = (ev) => {
@@ -611,6 +613,7 @@ function openGeminiSocket(ctl, model, opts, base, handleClassified, markUtteranc
         model: model.model,
         instructions: opts.instructions,
         thinking: model.thinking,
+        voice: opts.voice,
       }));
     };
     ws.onmessage = async (ev) => {

@@ -43,20 +43,48 @@
     <label class="block">WebSocket Gemini
       <select id="gemini-ws"></select>
     </label>
-    <p class="hint">Якщо браузер заблокує відповідь, картка моделі покаже помилку CORS або код WebSocket. Ідентифікатори моделей можна змінити прямо на картках.</p>
+    <h3>Ідентифікатори моделей</h3>
+    <p class="hint">Для кожного провайдера є готові id. Пункт «власний» відкриває поле, якщо потрібен інший.</p>
+    <div id="id-settings" class="id-settings"></div>
+    <p class="hint">Якщо браузер заблокує відповідь, текст помилки з’явиться під вибором моделі.</p>
   </section>
 
-  <section>
+  <section class="panel picker">
     <div class="section-title">
-      <h2>Моделі</h2>
-      <p>Оберіть картку для розмови або запишіть одну фразу й відтворіть її всім моделям, у яких є ключ.</p>
+      <h2>Вибір</h2>
+      <p>Оберіть провайдера й модель зі списків. Для порівняння позначте моделі внизу.</p>
     </div>
-    <div id="models" class="grid"></div>
+    <div class="choices">
+      <label>Провайдер
+        <select id="pick-provider"></select>
+      </label>
+      <label>Модель
+        <select id="pick-model"></select>
+      </label>
+      <label>Голос
+        <select id="pick-voice"></select>
+      </label>
+      <label id="voice-custom-wrap" hidden>Власний голос
+        <input id="voice-custom" autocomplete="off" spellcheck="false">
+      </label>
+      <label id="effort-wrap">Зусилля міркування
+        <select id="pick-effort"></select>
+      </label>
+      <label id="thinking-wrap">Рівень thinking
+        <select id="pick-thinking"></select>
+      </label>
+      <label class="span-2">Моделі для порівняння
+        <select id="pick-compare" multiple size="6"></select>
+      </label>
+    </div>
+    <p id="model-meta" class="hint"></p>
+    <p id="model-note" class="hint"></p>
+    <p id="model-error" class="err"></p>
   </section>
 
   <section class="controls">
     <button id="mic" type="button">🎤 Утримуйте і говоріть</button>
-    <button id="cmp" class="compare" type="button">🔁 Порівняти: один запит → усі моделі з ключем</button>
+    <button id="cmp" class="compare" type="button">🔁 Порівняти: один запит → обрані моделі</button>
     <button id="cancel" class="ghost" type="button" hidden>Скасувати</button>
     <p id="status" role="status">Оберіть модель</p>
     <div class="meter" aria-hidden="true"><span id="level"></span></div>
