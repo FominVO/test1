@@ -91,6 +91,8 @@ test('xAI session is manual turn-taking at 24 kHz and Ukrainian', () => {
   assert.equal(update.session.turn_detection, null);
   assert.equal(update.session.audio.input.format.rate, 24000);
   assert.equal(update.session.audio.input.transcription.language_hint, 'uk');
+  assert.equal(update.session.voice, 'eve');
+  assert.equal(xaiSessionUpdate('Відповідай українською.', 'ara').session.voice, 'ara');
   assert.deepEqual(xaiEndMessages().map((m) => m.type), ['input_audio_buffer.commit', 'response.create']);
   assert.equal(xaiSubprotocol('tok'), 'xai-client-secret.tok');
 });
@@ -104,7 +106,8 @@ test('OpenAI live body delegates to the chosen backend without an audio format',
     sdp: 'v=0',
   });
   assert.equal(body.session.model, 'gpt-live-1');
-  assert.equal(body.session.audio, undefined);
+  assert.equal(body.session.audio.format, undefined);
+  assert.equal(body.session.audio.output.voice, 'marin');
   assert.equal(body.session.delegation.responses.model, 'gpt-6-astra');
   assert.equal(body.session.delegation.responses.reasoning.effort, 'medium');
   assert.equal(body.transport.type, 'webrtc');

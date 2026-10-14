@@ -32,6 +32,7 @@ h1 { margin: 0; font-size: clamp(32px, 5vw, 52px); line-height: 0.95; }
 h2 { margin: 0 0 8px; font-size: 26px; }
 a { color: var(--blue); }
 button, input, textarea, select { font: inherit; color: inherit; }
+[hidden] { display: none !important; }
 button { cursor: pointer; }
 code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.92em; }
 
@@ -87,26 +88,14 @@ input, textarea, select {
 textarea { resize: vertical; }
 .key-actions { justify-content: flex-start; margin: 12px 0; }
 
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin: 14px 0 8px; }
-.card { padding: 14px; cursor: pointer; min-height: 220px; }
-.card.sel { border-color: var(--accent); }
-.card.off { opacity: 0.72; }
-.card b { font-size: 16px; }
-.rank {
-  display: inline-grid;
-  place-items: center;
-  min-width: 42px;
-  height: 32px;
-  padding: 0 8px;
-  border-radius: 999px;
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-weight: 800;
-}
-.tag { font-size: 13px; color: var(--warn); }
-.tag.ok { color: var(--ok); }
-.card .err { min-height: 1.2em; color: var(--danger); font-size: 13px; white-space: pre-wrap; }
-.meta { display: flex; gap: 10px; flex-wrap: wrap; color: var(--muted); font-size: 13px; margin: 8px 0; }
+.picker { margin-bottom: 8px; }
+.choices, .id-settings { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.span-2 { grid-column: 1 / -1; }
+select[multiple] { min-height: 9.5rem; }
+.id-group { display: grid; gap: 10px; margin: 0; padding: 12px; border: 1px solid var(--line); border-radius: 14px; }
+.id-group legend { padding: 0 6px; color: var(--text); font-family: Palatino, "Iowan Old Style", Georgia, serif; }
+.err { min-height: 1.2em; color: var(--danger); font-size: 14px; white-space: pre-wrap; }
+#model-meta { margin-bottom: 0; }
 
 .controls {
   align-items: center;
@@ -134,7 +123,8 @@ th { color: var(--muted); font-weight: 600; }
 footer { margin-top: 28px; color: var(--muted); font-size: 14px; }
 
 @media (max-width: 860px) {
-  .top, .keys, .split, .controls { display: grid; grid-template-columns: 1fr; }
+  .top, .keys, .split, .controls, .choices, .id-settings { display: grid; grid-template-columns: 1fr; }
+  .span-2 { grid-column: auto; }
   .top { align-items: start; }
   #mic, .compare, .ghost, .danger { width: 100%; }
 }

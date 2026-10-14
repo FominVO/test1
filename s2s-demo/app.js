@@ -1,8 +1,15 @@
 import {
+  BACKEND_PRESETS,
+  CUSTOM_OPTION,
+  EFFORT_OPTIONS,
   GEMINI_WS_ALPHA,
   GEMINI_WS_BETA,
   INSTRUCTIONS_DEFAULT,
+  MODEL_ID_PRESETS,
   MODELS,
+  PROVIDERS,
+  THINKING_OPTIONS,
+  VOICE_PRESETS,
 } from './protocol.js';
 import { connectModel, createPlayer, forgetSecrets } from './session.js';
 
@@ -11,7 +18,7 @@ const $ = (id) => document.getElementById(id);
 
 const state = load();
 const models = MODELS.map((model) => ({ ...model, ...(state.models[model.id] || {}) }));
-let selected = null;
+let selected = models.find((model) => model.id === state.selectedId) || models[0];
 let ctx = null;
 let micStream = null;
 let micPromise = null;
@@ -37,9 +44,18 @@ function load() {
       models: saved.models || {},
       instructions: saved.instructions || INSTRUCTIONS_DEFAULT,
       geminiWs: saved.geminiWs || GEMINI_WS_BETA,
+      selectedId: saved.selectedId || '',
+      compareIds: Array.isArray(saved.compareIds) ? saved.compareIds : null,
     };
   } catch {
-    return { keys: { xai: '', openai: '', gemini: '' }, models: {}, instructions: INSTRUCTIONS_DEFAULT, geminiWs: GEMINI_WS_BETA };
+    return {
+      keys: { xai: '', openai: '', gemini: '' },
+      models: {},
+      instructions: INSTRUCTIONS_DEFAULT,
+      geminiWs: GEMINI_WS_BETA,
+      selectedId: '',
+      compareIds: null,
+    };
   }
 }
 
@@ -51,13 +67,18 @@ function save() {
       backend: model.backend,
       effort: model.effort,
       thinking: model.thinking,
+      voice: model.voice,
     };
   }
+  const compare = $('pick-compare');
+  state.compareIds = compare ? [...compare.selectedOptions].map((option) => option.value) : state.compareIds;
   localStorage.setItem(STORAGE_KEY, JSON.stringify({
     keys: state.keys,
     models: modelsState,
     instructions: state.instructions,
     geminiWs: state.geminiWs,
+    selectedId: selected ? selected.id : '',
+    compareIds: state.compareIds,
   }));
 }
 
@@ -82,125 +103,192 @@ function renderAa() {
   }
 }
 
-function renderCards() {
-  const root = $('models');
-  root.replaceChildren();
+function providerKey(model) {
+  return model.key;
+}
+
+function presetsFor(model) {
+  return MODEL_ID_PRESETS[providerKey(model)] || [];
+}
+
+function voicesFor(model) {
+  return VOICE_PRESETS[providerKey(model)] || [];
+}
+
+function fillPresetSelect(select, presets, current) {
+  select.replaceChildren();
+  for (const value of presets) {
+    const option = document.createElement('option');
+    option.value = value;
+    option.textContent = value;
+    select.appendChild(option);
+  }
+  const custom = document.createElement('option');
+  custom.value = CUSTOM_OPTION;
+  custom.textContent = 'власний';
+  select.appendChild(custom);
+  select.value = presets.includes(current) ? current : CUSTOM_OPTION;
+  return select.value === CUSTOM_OPTION;
+}
+
+function option(select, value, label) {
+  const node = document.createElement('option');
+  node.value = value;
+  node.textContent = label;
+  select.appendChild(node);
+  return node;
+}
+
+function modelsForProvider(providerId) {
+  return models.filter((model) => model.key === providerId);
+}
+
+function modelLabel(model) {
+  const key = hasKey(model) ? 'ключ є' : 'немає ключа';
+  return `${model.rank} · ${model.name} — ${key}`;
+}
+
+function refreshModelOptions() {
+  const providerId = $('pick-provider').value;
+  const select = $('pick-model');
+  const current = selected && selected.key === providerId ? selected.id : '';
+  select.replaceChildren();
+  for (const model of modelsForProvider(providerId)) option(select, model.id, modelLabel(model));
+  if ([...select.options].some((item) => item.value === current)) select.value = current;
+  else if (select.options.length) select.value = select.options[0].value;
+}
+
+function refreshCompareOptions() {
+  const select = $('pick-compare');
+  const chosen = new Set(state.compareIds || models.map((model) => model.id));
+  select.replaceChildren();
   for (const model of models) {
-    const card = document.createElement('article');
-    card.className = 'card' + (hasKey(model) ? '' : ' off') + (selected === model ? ' sel' : '');
-    card.tabIndex = 0;
-
-    const top = document.createElement('div');
-    top.className = 'card-top';
-    const rank = document.createElement('span');
-    rank.className = 'rank';
-    rank.textContent = model.rank;
-    const title = document.createElement('b');
-    title.textContent = model.name;
-    top.append(rank, title);
-
-    const meta = document.createElement('div');
-    meta.className = 'meta';
-    meta.textContent = `${model.provider} · індекс ${Number(model.index).toFixed(1)} · TTFA ${model.ttfa == null ? 'н/д' : Number(model.ttfa).toFixed(2)} с · ${model.price}`;
-
-    const tag = document.createElement('div');
-    tag.className = 'tag' + (hasKey(model) ? ' ok' : '');
-    tag.textContent = hasKey(model) ? 'ключ є' : 'немає ключа';
-
-    const modelLabel = document.createElement('label');
-    modelLabel.textContent = 'Id моделі';
-    const modelInput = document.createElement('input');
-    modelInput.value = model.model;
-    modelInput.spellcheck = false;
-    modelInput.addEventListener('click', (event) => event.stopPropagation());
-    modelInput.addEventListener('input', () => {
-      model.model = modelInput.value.trim();
-      save();
-    });
-    modelLabel.appendChild(modelInput);
-
-    card.append(top, meta, tag, modelLabel);
-
-    if (model.kind === 'openai-live') {
-      const backend = field('Бекенд делегування', model.backend, (value) => { model.backend = value; save(); });
-      const effort = selectField('Зусилля', ['low', 'medium', 'high', 'xhigh', 'none', 'minimal'], model.effort, (value) => {
-        model.effort = value;
-        save();
-      });
-      card.append(backend, effort);
-    }
-    if (model.kind === 'gemini') {
-      const thinking = selectField('Thinking', ['', 'LOW', 'MEDIUM', 'HIGH'], model.thinking || '', (value) => {
-        model.thinking = value;
-        save();
-      });
-      card.appendChild(thinking);
-    }
-    if (model.note) {
-      const note = document.createElement('details');
-      note.className = 'hint';
-      const summary = document.createElement('summary');
-      summary.textContent = 'Який id моделі';
-      const text = document.createElement('p');
-      text.textContent = model.note;
-      note.append(summary, text);
-      note.addEventListener('click', (event) => event.stopPropagation());
-      card.appendChild(note);
-    }
-    const err = document.createElement('p');
-    err.className = 'err';
-    err.dataset.err = model.id;
-    card.appendChild(err);
-
-    const choose = () => {
-      selected = model;
-      document.querySelectorAll('.card').forEach((node) => node.classList.remove('sel'));
-      card.classList.add('sel');
-      setStatus(hasKey(model) ? `Готово: ${model.name}` : 'немає ключа');
-    };
-    card.addEventListener('click', choose);
-    card.addEventListener('keydown', (event) => {
-      if (event.target !== card) return;
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        choose();
-      }
-    });
-    root.appendChild(card);
+    const node = option(select, model.id, modelLabel(model));
+    node.selected = chosen.has(model.id);
   }
 }
 
-function field(label, value, onInput) {
-  const wrap = document.createElement('label');
-  wrap.textContent = label;
-  const input = document.createElement('input');
-  input.value = value || '';
-  input.addEventListener('click', (event) => event.stopPropagation());
-  input.addEventListener('input', () => onInput(input.value.trim()));
-  wrap.appendChild(input);
-  return wrap;
+function showChoiceError(model, text) {
+  if (selected && model && model.id === selected.id) $('model-error').textContent = text || '';
 }
 
-function selectField(label, values, current, onChange) {
+function applySelection(announce) {
+  selected = models.find((model) => model.id === $('pick-model').value) || models[0];
+  const voiceSelect = $('pick-voice');
+  const customVoice = fillPresetSelect(voiceSelect, voicesFor(selected), selected.voice);
+  $('voice-custom-wrap').hidden = !customVoice;
+  $('voice-custom').value = customVoice ? selected.voice : '';
+  const openai = selected.kind === 'openai-live';
+  const gemini = selected.kind === 'gemini';
+  $('effort-wrap').hidden = !openai;
+  $('thinking-wrap').hidden = !gemini;
+  if (openai) $('pick-effort').value = EFFORT_OPTIONS.includes(selected.effort) ? selected.effort : 'medium';
+  if (gemini) $('pick-thinking').value = selected.thinking || '';
+  const ttfa = selected.ttfa == null ? 'н/д' : Number(selected.ttfa).toFixed(2);
+  $('model-meta').textContent = `${selected.provider} · id ${selected.model} · індекс ${Number(selected.index).toFixed(1)} · TTFA ${ttfa} с · ${selected.price} · ${hasKey(selected) ? 'ключ є' : 'немає ключа'}`;
+  $('model-note').textContent = selected.note || '';
+  if (announce) setStatus(hasKey(selected) ? `Готово: ${selected.name}` : 'немає ключа');
+  save();
+}
+
+function initChoices() {
+  const providerSelect = $('pick-provider');
+  for (const provider of PROVIDERS) option(providerSelect, provider.id, provider.label);
+  providerSelect.value = selected.key;
+  providerSelect.addEventListener('change', () => {
+    refreshModelOptions();
+    applySelection(true);
+  });
+  $('pick-model').addEventListener('change', () => applySelection(true));
+  $('pick-voice').addEventListener('change', () => {
+    const custom = $('pick-voice').value === CUSTOM_OPTION;
+    $('voice-custom-wrap').hidden = !custom;
+    if (!custom) {
+      selected.voice = $('pick-voice').value;
+      save();
+    } else if (!$('voice-custom').value) {
+      $('voice-custom').value = selected.voice || '';
+    }
+  });
+  $('voice-custom').addEventListener('input', () => {
+    selected.voice = $('voice-custom').value.trim();
+    save();
+  });
+  const effort = $('pick-effort');
+  for (const value of EFFORT_OPTIONS) option(effort, value, value);
+  effort.addEventListener('change', () => {
+    selected.effort = effort.value;
+    save();
+  });
+  const thinking = $('pick-thinking');
+  for (const item of THINKING_OPTIONS) option(thinking, item.value, item.label);
+  thinking.addEventListener('change', () => {
+    selected.thinking = thinking.value;
+    save();
+  });
+  $('pick-compare').addEventListener('change', save);
+  refreshModelOptions();
+  refreshCompareOptions();
+  applySelection(false);
+  buildIdSettings();
+}
+
+function buildIdSettings() {
+  const root = $('id-settings');
+  root.replaceChildren();
+  for (const provider of PROVIDERS) {
+    const group = document.createElement('fieldset');
+    group.className = 'id-group';
+    const legend = document.createElement('legend');
+    legend.textContent = provider.label;
+    group.appendChild(legend);
+    for (const model of modelsForProvider(provider.id)) {
+      group.appendChild(idControl(`Ідентифікатор · ${model.name}`, presetsFor(model), model.model, (value) => {
+        model.model = value;
+        if (selected === model) applySelection(false);
+        else save();
+      }));
+      if (model.kind === 'openai-live') {
+        group.appendChild(idControl('Бекенд делегування', BACKEND_PRESETS, model.backend, (value) => {
+          model.backend = value;
+          save();
+        }));
+      }
+    }
+    root.appendChild(group);
+  }
+}
+
+function idControl(label, presets, current, onValue) {
   const wrap = document.createElement('label');
   wrap.textContent = label;
   const select = document.createElement('select');
-  for (const value of values) {
-    const option = document.createElement('option');
-    option.value = value;
-    option.textContent = value || 'вимкнено';
-    if (value === current) option.selected = true;
-    select.appendChild(option);
-  }
-  select.addEventListener('click', (event) => event.stopPropagation());
-  select.addEventListener('change', () => onChange(select.value));
-  wrap.appendChild(select);
+  const custom = document.createElement('input');
+  custom.autocomplete = 'off';
+  custom.spellcheck = false;
+  const useCustom = fillPresetSelect(select, presets, current);
+  custom.hidden = !useCustom;
+  custom.value = useCustom ? current : '';
+  let lastPreset = presets.includes(current) ? current : '';
+  select.addEventListener('change', () => {
+    const isCustom = select.value === CUSTOM_OPTION;
+    custom.hidden = !isCustom;
+    if (!isCustom) {
+      lastPreset = select.value;
+      onValue(select.value);
+    } else {
+      if (!custom.value.trim()) custom.value = lastPreset;
+      onValue(custom.value.trim());
+    }
+  });
+  custom.addEventListener('input', () => onValue(custom.value.trim()));
+  wrap.append(select, custom);
   return wrap;
 }
 
-function cardError(model, text) {
-  const node = document.querySelector(`[data-err="${model.id}"]`);
-  if (node) node.textContent = text || '';
+function compareModels() {
+  const ids = new Set([...$('pick-compare').selectedOptions].map((option) => option.value));
+  return models.filter((model) => ids.has(model.id) && hasKey(model));
 }
 
 function addRow(model, transcript, err) {
@@ -285,7 +373,7 @@ function runTurn(model, mode) {
   let latched = false;
   model._lat = null;
   model._transport = '';
-  cardError(model, '');
+  showChoiceError(model, '');
   logEl.textContent = 'Підключення…';
   let resolveDone;
   const done = new Promise((resolve) => { resolveDone = resolve; });
@@ -293,6 +381,7 @@ function runTurn(model, mode) {
     key: state.keys[model.key].trim(),
     instructions: state.instructions,
     geminiWs: state.geminiWs,
+    voice: model.voice,
     mode,
     audioContext: ctx,
     micStream,
@@ -314,7 +403,7 @@ function runTurn(model, mode) {
     onUtteranceClosed: () => { model._tEnd = performance.now(); },
     onError: (message) => {
       turnError = message;
-      cardError(model, message);
+      showChoiceError(model, message);
       setStatus(`Помилка: ${message}`);
     },
     onDone: () => resolveDone(),
@@ -365,7 +454,7 @@ async function pressMic(event) {
     holding = false;
     mic.classList.remove('rec');
     const message = err.message || String(err);
-    cardError(selected, message);
+    showChoiceError(selected, message);
     setStatus(`Помилка: ${message}`);
     addRow(selected, '', message);
     closeActive();
@@ -421,9 +510,9 @@ cmp.addEventListener('click', async () => {
   }
   recording = false;
   stopChunks();
-  cmp.textContent = '🔁 Порівняти: один запит → усі моделі з ключем';
-  const list = models.filter(hasKey);
-  if (!list.length) return setStatus('Немає жодного ключа для порівняння');
+  cmp.textContent = '🔁 Порівняти: один запит → обрані моделі';
+  const list = compareModels();
+  if (!list.length) return setStatus('Немає обраних моделей із ключем');
   if (!compareChunks.length) return setStatus('Запис порожній');
   $('cancel').hidden = false;
   cmp.disabled = true;
@@ -445,7 +534,7 @@ cmp.addEventListener('click', async () => {
       addRow(model, transcript, error);
     } catch (err) {
       const message = err.message || String(err);
-      cardError(model, message);
+      showChoiceError(model, message);
       addRow(model, '', message);
     } finally {
       closeActive();
@@ -474,8 +563,13 @@ function bindKey(id, name) {
   input.addEventListener('input', () => {
     state.keys[name] = input.value;
     save();
-    renderCards();
-    if (selected && !hasKey(selected)) setStatus('немає ключа');
+    refreshModelOptions();
+    refreshCompareOptions();
+    applySelection(false);
+    if (!holding && !recording) {
+      if (selected && !hasKey(selected)) setStatus('немає ключа');
+      else if (selected && selected.key === name) setStatus(`Готово: ${selected.name}`);
+    }
   });
 }
 
@@ -495,7 +589,9 @@ $('clear-keys').addEventListener('click', () => {
   forgetSecrets();
   for (const id of ['key-xai', 'key-openai', 'key-gemini']) $(id).value = '';
   save();
-  renderCards();
+  refreshModelOptions();
+  refreshCompareOptions();
+  applySelection(false);
   setStatus('Ключі очищено');
 });
 
@@ -519,4 +615,4 @@ geminiSelect.addEventListener('change', () => {
 });
 
 renderAa();
-renderCards();
+initChoices();

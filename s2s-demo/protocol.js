@@ -18,6 +18,35 @@ export const GEMINI_WS_ALPHA =
   'wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent';
 
 export const SILENCE_RMS = 0.015;
+export const CUSTOM_OPTION = '__custom__';
+
+export const PROVIDERS = [
+  { id: 'xai', label: 'SpaceXAI' },
+  { id: 'openai', label: 'OpenAI' },
+  { id: 'gemini', label: 'Google' },
+];
+
+export const MODEL_ID_PRESETS = {
+  xai: ['grok-voice-3.0', 'grok-voice-latest', 'grok-voice-think-fast-2.0'],
+  openai: ['gpt-live-1'],
+  gemini: ['gemini-3.8-live', 'gemini-3.8-live-extended-thinking'],
+};
+
+export const BACKEND_PRESETS = ['gpt-6-astra', 'gpt-6-sol'];
+
+export const VOICE_PRESETS = {
+  xai: ['eve', 'ara', 'rex', 'sal', 'leo'],
+  openai: ['marin', 'cedar', 'alloy', 'ash', 'ballad', 'coral', 'echo', 'sage', 'shimmer', 'verse'],
+  gemini: ['Puck', 'Charon', 'Kore', 'Fenrir', 'Aoede', 'Leda', 'Orus', 'Zephyr'],
+};
+
+export const EFFORT_OPTIONS = ['low', 'medium', 'high', 'xhigh', 'minimal', 'none'];
+export const THINKING_OPTIONS = [
+  { value: '', label: 'вимкнено' },
+  { value: 'LOW', label: 'LOW' },
+  { value: 'MEDIUM', label: 'MEDIUM' },
+  { value: 'HIGH', label: 'HIGH' },
+];
 
 export const MODELS = [
   {
@@ -30,6 +59,7 @@ export const MODELS = [
     ttfa: null,
     price: '$4.80/год вх. аудіо (API, анонс; $0.08/хв)',
     kind: 'xai',
+    voice: 'eve',
     model: 'grok-voice-3.0',
     fallbackModel: 'grok-voice-latest',
     note: 'Документація API досі називає grok-voice-latest і grok-voice-think-fast-2.0. Анонс Grok Voice 3.0 каже, що grok-voice-latest уже перемкнено на 3.0. Якщо grok-voice-3.0 відхилено, буде повтор із grok-voice-latest.',
@@ -44,6 +74,7 @@ export const MODELS = [
     ttfa: 1.34,
     price: '$5.83/год вх. аудіо',
     kind: 'openai-live',
+    voice: 'marin',
     model: 'gpt-live-1',
     backend: 'gpt-6-astra',
     effort: 'medium',
@@ -58,6 +89,7 @@ export const MODELS = [
     ttfa: 1.35,
     price: '$3.50/год вх. аудіо',
     kind: 'gemini',
+    voice: 'Puck',
     model: 'gemini-3.8-live-extended-thinking',
     thinking: 'HIGH',
   },
@@ -71,6 +103,7 @@ export const MODELS = [
     ttfa: 0.7,
     price: '$4.80/год вх. аудіо',
     kind: 'xai',
+    voice: 'eve',
     model: 'grok-voice-think-fast-2.0',
   },
   {
@@ -83,6 +116,7 @@ export const MODELS = [
     ttfa: 1.24,
     price: '$4.47/год вх. аудіо',
     kind: 'openai-live',
+    voice: 'marin',
     model: 'gpt-live-1',
     backend: 'gpt-6-sol',
     effort: 'low',
@@ -97,6 +131,7 @@ export const MODELS = [
     ttfa: 1.18,
     price: '$0.84/год вх. аудіо',
     kind: 'gemini',
+    voice: 'Puck',
     model: 'gemini-3.8-live',
     thinking: '',
   },
@@ -238,11 +273,11 @@ export function concatFloat32(chunks) {
   return out;
 }
 
-export function xaiSessionUpdate(instructions) {
+export function xaiSessionUpdate(instructions, voice = 'eve') {
   return {
     type: 'session.update',
     session: {
-      voice: 'eve',
+      voice: voice || 'eve',
       instructions,
       turn_detection: null,
       audio: {
@@ -275,11 +310,12 @@ export function xaiSubprotocol(token) {
   return `xai-client-secret.${token}`;
 }
 
-export function openaiLiveBody({ model, instructions, backend, effort, sdp }) {
+export function openaiLiveBody({ model, instructions, backend, effort, sdp, voice = 'marin' }) {
   return {
     session: {
       model,
       instructions,
+      audio: { output: { voice: voice || 'marin' } },
       delegation: {
         type: 'responses',
         responses: {
@@ -293,7 +329,7 @@ export function openaiLiveBody({ model, instructions, backend, effort, sdp }) {
   };
 }
 
-export function openaiSessionStart({ model, instructions, backend, effort }) {
+export function openaiSessionStart({ model, instructions, backend, effort, voice = 'marin' }) {
   return {
     type: 'session.start',
     session: {
@@ -301,7 +337,7 @@ export function openaiSessionStart({ model, instructions, backend, effort }) {
       instructions,
       audio: {
         format: { type: 'audio/pcm', rate: 24000 },
-        output: { voice: 'marin' },
+        output: { voice: voice || 'marin' },
       },
       delegation: {
         type: 'responses',
@@ -332,11 +368,11 @@ export function geminiModelName(modelId) {
   return `models/${bare}`;
 }
 
-export function geminiSetup({ model, instructions, thinking }) {
+export function geminiSetup({ model, instructions, thinking, voice = 'Puck' }) {
   const generationConfig = {
     responseModalities: ['AUDIO'],
     speechConfig: {
-      voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Puck' } },
+      voiceConfig: { prebuiltVoiceConfig: { voiceName: voice || 'Puck' } },
     },
   };
   if (thinking) generationConfig.thinkingConfig = { thinkingLevel: thinking };
