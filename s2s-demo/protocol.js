@@ -48,6 +48,95 @@ export const THINKING_OPTIONS = [
   { value: 'HIGH', label: 'HIGH' },
 ];
 
+// BCP-47 codes from the Live Translation guide (ai.google.dev/gemini-api/docs/live-api/live-translate).
+const TRANSLATION_LANGUAGE_REST = [
+  { code: 'af', label: 'Африкаанс' },
+  { code: 'ak', label: 'Акан' },
+  { code: 'sq', label: 'Албанська' },
+  { code: 'am', label: 'Амхарська' },
+  { code: 'ar', label: 'Арабська' },
+  { code: 'hy', label: 'Вірменська' },
+  { code: 'az', label: 'Азербайджанська' },
+  { code: 'eu', label: 'Баскська' },
+  { code: 'be', label: 'Білоруська' },
+  { code: 'bn', label: 'Бенгальська' },
+  { code: 'bg', label: 'Болгарська' },
+  { code: 'my', label: 'Бірманська' },
+  { code: 'ca', label: 'Каталанська' },
+  { code: 'zh-Hans', label: 'Китайська (спрощена)' },
+  { code: 'zh-Hant', label: 'Китайська (традиційна)' },
+  { code: 'hr', label: 'Хорватська' },
+  { code: 'cs', label: 'Чеська' },
+  { code: 'da', label: 'Данська' },
+  { code: 'nl', label: 'Нідерландська' },
+  { code: 'et', label: 'Естонська' },
+  { code: 'fil', label: 'Філіппінська' },
+  { code: 'fi', label: 'Фінська' },
+  { code: 'fr', label: 'Французька' },
+  { code: 'gl', label: 'Галісійська' },
+  { code: 'ka', label: 'Грузинська' },
+  { code: 'de', label: 'Німецька' },
+  { code: 'el', label: 'Грецька' },
+  { code: 'gu', label: 'Гуджараті' },
+  { code: 'ha', label: 'Хауса' },
+  { code: 'he', label: 'Іврит' },
+  { code: 'hi', label: 'Гінді' },
+  { code: 'hu', label: 'Угорська' },
+  { code: 'is', label: 'Ісландська' },
+  { code: 'id', label: 'Індонезійська' },
+  { code: 'it', label: 'Італійська' },
+  { code: 'ja', label: 'Японська' },
+  { code: 'jv', label: 'Яванська' },
+  { code: 'kn', label: 'Каннада' },
+  { code: 'kk', label: 'Казахська' },
+  { code: 'km', label: 'Кхмерська' },
+  { code: 'rw', label: 'Кіньяруанда' },
+  { code: 'ko', label: 'Корейська' },
+  { code: 'lo', label: 'Лаоська' },
+  { code: 'lv', label: 'Латиська' },
+  { code: 'lt', label: 'Литовська' },
+  { code: 'mk', label: 'Македонська' },
+  { code: 'ms', label: 'Малайська' },
+  { code: 'ml', label: 'Малаялам' },
+  { code: 'mr', label: 'Маратхі' },
+  { code: 'mn', label: 'Монгольська' },
+  { code: 'ne', label: 'Непальська' },
+  { code: 'no', label: 'Норвезька' },
+  { code: 'nb', label: 'Норвезька (букмол)' },
+  { code: 'fa', label: 'Перська' },
+  { code: 'pl', label: 'Польська' },
+  { code: 'pt-BR', label: 'Португальська (Бразилія)' },
+  { code: 'pt-PT', label: 'Португальська (Португалія)' },
+  { code: 'pa', label: 'Панджабі' },
+  { code: 'ro', label: 'Румунська' },
+  { code: 'ru', label: 'Російська' },
+  { code: 'sr', label: 'Сербська' },
+  { code: 'sd', label: 'Сіндхі' },
+  { code: 'si', label: 'Сингальська' },
+  { code: 'sk', label: 'Словацька' },
+  { code: 'sl', label: 'Словенська' },
+  { code: 'es', label: 'Іспанська' },
+  { code: 'su', label: 'Сунданська' },
+  { code: 'sw', label: 'Суахілі' },
+  { code: 'sv', label: 'Шведська' },
+  { code: 'ta', label: 'Тамільська' },
+  { code: 'te', label: 'Телугу' },
+  { code: 'th', label: 'Тайська' },
+  { code: 'tr', label: 'Турецька' },
+  { code: 'ur', label: 'Урду' },
+  { code: 'uz', label: 'Узбецька' },
+  { code: 'vi', label: 'Вʼєтнамська' },
+  { code: 'zu', label: 'Зулу' },
+].sort((a, b) => a.label.localeCompare(b.label, 'uk'));
+
+export const TRANSLATION_LANGUAGES = [
+  { code: 'uk', label: 'Українська' },
+  { code: 'en', label: 'Англійська' },
+  ...TRANSLATION_LANGUAGE_REST,
+];
+
+export const TRANSLATE_MODEL_ID = 'gemini-3.5-live-translate-preview';
+
 export const MODELS = [
   {
     id: 'grok-voice-3',
@@ -134,6 +223,24 @@ export const MODELS = [
     voice: 'Puck',
     model: 'gemini-3.8-live',
     thinking: '',
+  },
+  {
+    id: 'gemini-translate',
+    name: 'Gemini Translate Live',
+    provider: 'Google',
+    key: 'gemini',
+    rank: 'переклад',
+    index: null,
+    ttfa: null,
+    price: 'н/д',
+    kind: 'gemini',
+    translate: true,
+    idPresets: [TRANSLATE_MODEL_ID],
+    voice: '',
+    model: TRANSLATE_MODEL_ID,
+    sourceLanguage: '',
+    targetLanguage: 'uk',
+    note: 'Модель перекладу мовлення в мовлення, не розмовний агент. Цільова мова йде в translationConfig.targetLanguageCode. Мову джерела API визначає сама; список лише підказує languageCodes для розпізнавання. Інструкції й голос не надсилаються. Якщо мовець уже говорить цільовою мовою, аудіо повторюється (echoTargetLanguage).',
   },
 ];
 
@@ -368,7 +475,25 @@ export function geminiModelName(modelId) {
   return `models/${bare}`;
 }
 
-export function geminiSetup({ model, instructions, thinking, voice = 'Puck' }) {
+export function geminiSetup({ model, instructions, thinking, voice = 'Puck', translate = false, targetLanguage = 'uk', sourceLanguage = '' }) {
+  if (translate) {
+    const inputAudioTranscription = {};
+    if (sourceLanguage) inputAudioTranscription.languageCodes = [sourceLanguage];
+    return {
+      setup: {
+        model: geminiModelName(model),
+        generationConfig: {
+          responseModalities: ['AUDIO'],
+          inputAudioTranscription,
+          outputAudioTranscription: {},
+          translationConfig: {
+            targetLanguageCode: targetLanguage || 'uk',
+            echoTargetLanguage: true,
+          },
+        },
+      },
+    };
+  }
   const generationConfig = {
     responseModalities: ['AUDIO'],
     speechConfig: {
@@ -459,12 +584,14 @@ export function classifyEvent(kind, event) {
       if (part.inlineData?.data) audios.push(part.inlineData.data);
     }
     const text = sc?.outputTranscription?.text || sc?.outputTranscription?.transcript || '';
+    const inputText = sc?.inputTranscription?.text || sc?.inputTranscription?.transcript || '';
     const interactionStatus = event.interactionStatus || event.interaction_status || sc?.interactionStatus || sc?.interaction_status || '';
     if (!sc && !interactionStatus) return { type: 'ignore' };
     return {
       type: 'content',
       audios,
       text,
+      inputText,
       turnComplete: !!(sc && (sc.turnComplete || sc.turn_complete)),
       interactionStatus: interactionStatus ? String(interactionStatus).toUpperCase() : '',
     };

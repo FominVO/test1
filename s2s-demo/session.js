@@ -192,6 +192,7 @@ export function connectModel(model, opts) {
     else if (classified.type === 'done') fireDone();
     else if (classified.type === 'content') {
       for (const b64 of classified.audios || []) noteAudio(base64ToPcm16(b64), 24000);
+      if (classified.inputText) opts.onTranscript && opts.onTranscript('user', classified.inputText);
       if (classified.text) opts.onTranscript && opts.onTranscript('assistant', classified.text);
       if (geminiTurnFinished(kind, classified, model.thinking)) fireDone();
       else if (utteranceClosed && sawAudio && classified.turnComplete) armSilence();
@@ -612,8 +613,11 @@ function openGeminiSocket(ctl, model, opts, base, handleClassified, markUtteranc
       sendJson(ws, geminiSetup({
         model: model.model,
         instructions: opts.instructions,
-        thinking: model.thinking,
+        thinking: model.translate ? '' : model.thinking,
         voice: opts.voice,
+        translate: !!model.translate,
+        targetLanguage: model.targetLanguage,
+        sourceLanguage: model.sourceLanguage,
       }));
     };
     ws.onmessage = async (ev) => {

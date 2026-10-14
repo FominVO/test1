@@ -9,6 +9,7 @@ import {
   MODELS,
   PROVIDERS,
   THINKING_OPTIONS,
+  TRANSLATION_LANGUAGES,
   VOICE_PRESETS,
 } from './protocol.js';
 import { connectModel, createPlayer, forgetSecrets } from './session.js';
@@ -68,6 +69,8 @@ function save() {
       effort: model.effort,
       thinking: model.thinking,
       voice: model.voice,
+      sourceLanguage: model.sourceLanguage,
+      targetLanguage: model.targetLanguage,
     };
   }
   const compare = $('pick-compare');
@@ -94,7 +97,7 @@ function renderAa() {
   const body = $('aa');
   for (const model of models) {
     const tr = document.createElement('tr');
-    for (const value of [model.rank, model.name, model.provider, Number(model.index).toFixed(1), model.ttfa == null ? 'н/д' : Number(model.ttfa).toFixed(2), model.price]) {
+    for (const value of [model.rank, model.name, model.provider, model.index == null ? 'н/д' : Number(model.index).toFixed(1), model.ttfa == null ? 'н/д' : Number(model.ttfa).toFixed(2), model.price]) {
       const td = document.createElement('td');
       td.textContent = String(value);
       tr.appendChild(td);
@@ -108,7 +111,7 @@ function providerKey(model) {
 }
 
 function presetsFor(model) {
-  return MODEL_ID_PRESETS[providerKey(model)] || [];
+  return model.idPresets || MODEL_ID_PRESETS[providerKey(model)] || [];
 }
 
 function voicesFor(model) {
@@ -176,16 +179,29 @@ function applySelection(announce) {
   selected = models.find((model) => model.id === $('pick-model').value) || models[0];
   const voiceSelect = $('pick-voice');
   const customVoice = fillPresetSelect(voiceSelect, voicesFor(selected), selected.voice);
-  $('voice-custom-wrap').hidden = !customVoice;
+  const translate = !!selected.translate;
+  $('voice-custom-wrap').hidden = translate || !customVoice;
   $('voice-custom').value = customVoice ? selected.voice : '';
   const openai = selected.kind === 'openai-live';
-  const gemini = selected.kind === 'gemini';
+  const gemini = selected.kind === 'gemini' && !translate;
+  $('voice-wrap').hidden = translate;
   $('effort-wrap').hidden = !openai;
   $('thinking-wrap').hidden = !gemini;
+  $('source-lang-wrap').hidden = !translate;
+  $('target-lang-wrap').hidden = !translate;
   if (openai) $('pick-effort').value = EFFORT_OPTIONS.includes(selected.effort) ? selected.effort : 'medium';
   if (gemini) $('pick-thinking').value = selected.thinking || '';
+  if (translate) {
+    const source = $('pick-source-lang');
+    source.value = [...source.options].some((item) => item.value === (selected.sourceLanguage || '')) ? (selected.sourceLanguage || '') : '';
+    const target = $('pick-target-lang');
+    target.value = [...target.options].some((item) => item.value === selected.targetLanguage) ? selected.targetLanguage : 'uk';
+    selected.sourceLanguage = source.value;
+    selected.targetLanguage = target.value;
+  }
   const ttfa = selected.ttfa == null ? 'н/д' : Number(selected.ttfa).toFixed(2);
-  $('model-meta').textContent = `${selected.provider} · id ${selected.model} · індекс ${Number(selected.index).toFixed(1)} · TTFA ${ttfa} с · ${selected.price} · ${hasKey(selected) ? 'ключ є' : 'немає ключа'}`;
+  const indexText = selected.index == null ? 'н/д' : Number(selected.index).toFixed(1);
+  $('model-meta').textContent = `${selected.provider} · id ${selected.model} · індекс ${indexText} · TTFA ${ttfa} с · ${selected.price} · ${hasKey(selected) ? 'ключ є' : 'немає ключа'}`;
   $('model-note').textContent = selected.note || '';
   if (announce) setStatus(hasKey(selected) ? `Готово: ${selected.name}` : 'немає ключа');
   save();
@@ -227,6 +243,23 @@ function initChoices() {
     save();
   });
   $('pick-compare').addEventListener('change', save);
+  const source = $('pick-source-lang');
+  option(source, '', 'авто (визначення)');
+  const target = $('pick-target-lang');
+  for (const language of TRANSLATION_LANGUAGES) {
+    option(source, language.code, language.label);
+    option(target, language.code, language.label);
+  }
+  source.addEventListener('change', () => {
+    if (!selected?.translate) return;
+    selected.sourceLanguage = source.value;
+    save();
+  });
+  target.addEventListener('change', () => {
+    if (!selected?.translate) return;
+    selected.targetLanguage = target.value;
+    save();
+  });
   refreshModelOptions();
   refreshCompareOptions();
   applySelection(false);
@@ -295,7 +328,7 @@ function addRow(model, transcript, err) {
   const tr = document.createElement('tr');
   const values = [
     `${model.name}${model._transport ? ` (${model._transport})` : ''}`,
-    String(model.index),
+    model.index == null ? 'н/д' : String(model.index),
     model.ttfa ?? 'н/д',
     err ? '—' : (model._lat ?? '—'),
     model.price,
