@@ -36,7 +36,12 @@ test('AA roster keeps the requested top five plus bonus', () => {
     ['4', 81.3, 'xai'],
     ['5', 80.1, 'openai-live'],
     ['бонус', 76.0, 'gemini'],
+    ['переклад', null, 'gemini'],
   ]);
+  assert.equal(MODELS.at(-1).translate, true);
+  assert.equal(MODELS.at(-1).model, 'gemini-3.5-live-translate-preview');
+  assert.equal(MODELS.at(-1).targetLanguage, 'uk');
+  assert.equal(MODELS.at(-1).sourceLanguage, '');
   assert.equal(MODELS[1].backend, 'gpt-6-astra');
   assert.equal(MODELS[1].effort, 'medium');
   assert.equal(MODELS[4].backend, 'gpt-6-sol');
@@ -133,6 +138,30 @@ test('Gemini setup uses 16 kHz input and thinking only on the extended model', (
     thinking: 'HIGH',
   });
   assert.equal(thinking.setup.generationConfig.thinkingConfig.thinkingLevel, 'HIGH');
+  const translated = geminiSetup({
+    model: 'gemini-3.5-live-translate-preview',
+    instructions: 'Українською.',
+    thinking: 'HIGH',
+    voice: 'Puck',
+    translate: true,
+    targetLanguage: 'uk',
+    sourceLanguage: 'en',
+  });
+  assert.equal(translated.setup.model, 'models/gemini-3.5-live-translate-preview');
+  assert.equal(translated.setup.systemInstruction, undefined);
+  assert.equal(translated.setup.generationConfig.speechConfig, undefined);
+  assert.equal(translated.setup.generationConfig.thinkingConfig, undefined);
+  assert.equal(translated.setup.generationConfig.translationConfig.targetLanguageCode, 'uk');
+  assert.equal(translated.setup.generationConfig.translationConfig.echoTargetLanguage, true);
+  assert.deepEqual(translated.setup.generationConfig.inputAudioTranscription.languageCodes, ['en']);
+  const detected = geminiSetup({
+    model: 'gemini-3.5-live-translate-preview',
+    translate: true,
+    targetLanguage: 'en',
+    sourceLanguage: '',
+  });
+  assert.equal(detected.setup.generationConfig.translationConfig.targetLanguageCode, 'en');
+  assert.equal(detected.setup.generationConfig.inputAudioTranscription.languageCodes, undefined);
   assert.equal(geminiAudioMessage('QQ==').realtimeInput.audio.mimeType, 'audio/pcm;rate=16000');
   assert.equal(geminiEndMessage().realtimeInput.audioStreamEnd, true);
   assert.equal(
@@ -150,12 +179,15 @@ test('server events map onto audio, transcript, ready and done', () => {
   const gem = classifyEvent('gemini', {
     serverContent: {
       modelTurn: { parts: [{ inlineData: { data: 'QQ==' } }] },
+      inputTranscription: { text: 'Hello' },
       outputTranscription: { text: 'Так' },
       turnComplete: true,
       interactionStatus: 'IN_PROGRESS',
     },
   });
   assert.equal(gem.audios[0], 'QQ==');
+  assert.equal(gem.inputText, 'Hello');
+  assert.equal(gem.text, 'Так');
   assert.equal(geminiTurnFinished('gemini', gem, 'HIGH'), false);
   assert.equal(geminiTurnFinished('gemini', { ...gem, interactionStatus: 'IDLE' }, 'HIGH'), true);
   assert.equal(geminiTurnFinished('gemini', gem, ''), true);

@@ -61,7 +61,7 @@
       <label>Модель
         <select id="pick-model"></select>
       </label>
-      <label>Голос
+      <label id="voice-wrap">Голос
         <select id="pick-voice"></select>
       </label>
       <label id="voice-custom-wrap" hidden>Власний голос
@@ -73,8 +73,14 @@
       <label id="thinking-wrap">Рівень thinking
         <select id="pick-thinking"></select>
       </label>
+      <label id="source-lang-wrap" hidden>Мова джерела
+        <select id="pick-source-lang"></select>
+      </label>
+      <label id="target-lang-wrap" hidden>Цільова мова
+        <select id="pick-target-lang"></select>
+      </label>
       <label class="span-2">Моделі для порівняння
-        <select id="pick-compare" multiple size="6"></select>
+        <select id="pick-compare" multiple size="7"></select>
       </label>
     </div>
     <p id="model-meta" class="hint"></p>
@@ -119,7 +125,7 @@
   <section>
     <div class="section-title">
       <h2>Індекс Speech-to-Speech</h2>
-      <p>Цифри з <a href="https://artificialanalysis.ai/speech-to-speech">artificialanalysis.ai/speech-to-speech</a>. Grok Voice 3.0 — 86.9 за анонсом xAI із посиланням на той самий індекс (жовтень 2026).</p>
+      <p>Цифри з <a href="https://artificialanalysis.ai/speech-to-speech">artificialanalysis.ai/speech-to-speech</a>. Grok Voice 3.0 — 86.9 за анонсом xAI із посиланням на той самий індекс (жовтень 2026). Gemini Translate Live у таблиці без індексу: це модель перекладу мовлення, не учасник рейтингу.</p>
     </div>
     <div class="table-wrap">
       <table>
