@@ -1,22 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Art, Stars, assetSrc, initials } from '../ui.jsx';
-import { useGame } from '../store.jsx';
+import { Art, Stars, initials } from '../ui.jsx';
 import { formatLong, helpPerson } from '../logic.js';
 
 export function MapView({ model, onOpen, act, content, rewards }) {
-  const { manifest } = useGame();
-  const mapUrl = assetSrc(manifest, 'mapBackground');
-  const sideUrl = assetSrc(manifest, 'worldBackground');
-  const [mapOk, setMapOk] = useState(Boolean(mapUrl));
   const [friendId, setFriendId] = useState(null);
-
-  useEffect(() => {
-    if (!mapUrl) return;
-    const image = new Image();
-    image.onload = () => setMapOk(true);
-    image.onerror = () => setMapOk(false);
-    image.src = mapUrl;
-  }, [mapUrl]);
 
   useEffect(() => {
     const node = document.getElementById('current-level');
@@ -38,42 +25,22 @@ export function MapView({ model, onOpen, act, content, rewards }) {
         <p>День {model.mine.dayNum} · {formatLong(model.asOf)}</p>
         <button type="button" className="btn tiny" onClick={() => document.getElementById('current-level')?.scrollIntoView({ block: 'center' })}>До мого кроку</button>
       </div>
-      <div className="saga">
-        <aside className="saga-side" aria-hidden="true">
-          {sideUrl && <img className="saga-side-art" src={sideUrl} alt="" />}
-        </aside>
-        <div className="saga-column map-column">
-          {model.worlds.map((world) => (
-            <WorldBand key={world.id} world={world} worlds={model.worlds} mapOk={mapOk} mapUrl={mapUrl} friendId={friendId} setFriendId={setFriendId} onOpen={onOpen} act={act} content={content} rewards={rewards} />
-          ))}
-          {model.horizon && <Horizon level={model.horizon} onOpen={onOpen} />}
-        </div>
-        <aside className="saga-side" aria-hidden="true">
-          {mapUrl && <img className="saga-side-art" src={mapUrl} alt="" />}
-        </aside>
+      <div className="saga-column map-column">
+        {model.worlds.map((world) => (
+          <WorldBand key={world.id} world={world} worlds={model.worlds} friendId={friendId} setFriendId={setFriendId} onOpen={onOpen} act={act} content={content} rewards={rewards} />
+        ))}
+        {model.horizon && <Horizon level={model.horizon} onOpen={onOpen} />}
       </div>
     </div>
   );
 }
 
-function WorldBand({ world, worlds, mapOk, mapUrl, friendId, setFriendId, onOpen, act, content, rewards }) {
+function WorldBand({ world, worlds, friendId, setFriendId, onOpen, act, content, rewards }) {
   const points = layout(world.levels);
-  const fromTop = (worlds.length - 1 - world.index) / (worlds.length - 1);
   const prev = world.index > 0 ? worlds[world.index - 1] : null;
-  const bandHeight = Math.max(760, points.length * 132);
-  const style = {
-    '--zone': world.accent,
-    height: `${bandHeight}px`,
-  };
-  const d = points.map((point, index) => `${index ? 'L' : 'M'} ${point.x} ${point.y}`).join(' ');
+  const style = { '--zone': world.accent };
   return (
-    <section className={`world-band ${world.unlocked ? '' : 'is-locked'} ${mapOk ? '' : 'is-plain'}`} style={style} aria-labelledby={`world-${world.id}`}>
-      <div className="band-frame">
-        {mapOk && mapUrl && (
-          <img className="band-art" src={mapUrl} alt="" style={{ objectPosition: `center ${fromTop * 100}%` }} />
-        )}
-        <div className="band-shade" />
-      </div>
+    <section className={`world-band ${world.unlocked ? '' : 'is-locked'}`} style={style} aria-labelledby={`world-${world.id}`}>
       <header className="world-plaque">
         <p className="eyebrow">{world.kicker}</p>
         <h2 id={`world-${world.id}`}>{world.title}</h2>
@@ -83,13 +50,15 @@ function WorldBand({ world, worlds, mapOk, mapUrl, friendId, setFriendId, onOpen
       {!world.unlocked && prev && (
         <p className="gate">70% зірок «{prev.title}» ({prev.earnedStars}/{prev.maxStars}) або {formatLong(world.unlockDate)}. Хто не встиг зірками, все одно заходить у календарний день.</p>
       )}
-      <svg className="trail" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-        <path className="road" pathLength="100" d={d} />
-        <path className="road-core" pathLength="100" d={d} />
-      </svg>
-      {points.map((level) => (
-        <LevelNode key={level.id} level={level} onOpen={onOpen} friendId={friendId} setFriendId={setFriendId} act={act} content={content} rewards={rewards} />
-      ))}
+      <div className="path-stage" style={{ minHeight: `${Math.max(520, points.length * 128)}px` }}>
+        <svg className="trail" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <path className="road" pathLength="100" d={curveThrough(points)} />
+          <path className="road-core" pathLength="100" d={curveThrough(points)} />
+        </svg>
+        {points.map((level) => (
+          <LevelNode key={level.id} level={level} onOpen={onOpen} friendId={friendId} setFriendId={setFriendId} act={act} content={content} rewards={rewards} />
+        ))}
+      </div>
     </section>
   );
 }
@@ -109,9 +78,14 @@ function Horizon({ level, onOpen }) {
 }
 
 function LevelNode({ level, onOpen, friendId, setFriendId, act, content, rewards }) {
-  const labelSide = level.x > 54 ? 'is-left' : 'is-right';
   return (
-    <div className="node-wrap" style={{ left: `${level.x}%`, top: `${level.y}%` }} id={level.current ? 'current-level' : undefined}>
+    <div
+      className="node-anchor"
+      style={{ left: `${level.x}%`, top: `${level.y}%` }}
+      data-x={level.x}
+      data-y={level.y}
+      id={level.current ? 'current-level' : undefined}
+    >
       <button
         type="button"
         className={`node ${level.current ? 'is-current' : ''} ${level.completed ? 'is-done' : ''} ${level.locked ? 'is-locked' : ''} ${level.overdue ? 'is-overdue' : ''}`}
@@ -122,7 +96,7 @@ function LevelNode({ level, onOpen, friendId, setFriendId, act, content, rewards
         <Art id={`icons.${level.icon}`} alt="" />
       </button>
       <Stars value={level.stars} />
-      <span className={`node-label ${labelSide}`}>{level.title}</span>
+      <span className={`node-label ${level.labelSide}`} style={level.labelDy ? { transform: `translateY(calc(-50% + ${level.labelDy}px))` } : undefined}>{level.title}</span>
       {level.friends?.length > 0 && (
         <div className="friend-stack">
           {level.friends.map((person) => (
@@ -161,12 +135,39 @@ function LevelNode({ level, onOpen, friendId, setFriendId, act, content, rewards
 
 function layout(levels) {
   const count = levels.length;
-  return levels.map((level, index) => {
+  const points = levels.map((level, index) => {
     const t = count === 1 ? 0.5 : index / (count - 1);
     return {
       ...level,
-      y: 76 - t * 56,
-      x: 50 + Math.sin(t * Math.PI * 2.2 + 0.5) * 18,
+      y: 86 - t * 72,
+      x: 50 + Math.sin(t * Math.PI * 2 + 0.35) * 10,
     };
   });
+  const placed = [];
+  return points.map((level) => {
+    let side = level.x < 50 ? 'is-left' : 'is-right';
+    const clash = (candidate) => placed.some((item) => item.side === candidate && Math.abs(item.y - level.y) < 11);
+    if (clash(side)) side = side === 'is-left' ? 'is-right' : 'is-left';
+    const labelDy = clash(side) ? 28 : 0;
+    placed.push({ side, y: level.y + labelDy / 8 });
+    return { ...level, labelSide: side, labelDy };
+  });
+}
+
+function curveThrough(points) {
+  if (!points.length) return '';
+  if (points.length === 1) return `M ${points[0].x} ${points[0].y}`;
+  let d = `M ${points[0].x} ${points[0].y}`;
+  for (let i = 0; i < points.length - 1; i += 1) {
+    const p0 = points[i - 1] || points[i];
+    const p1 = points[i];
+    const p2 = points[i + 1];
+    const p3 = points[i + 2] || p2;
+    const c1x = p1.x + (p2.x - p0.x) / 6;
+    const c1y = p1.y + (p2.y - p0.y) / 6;
+    const c2x = p2.x - (p3.x - p1.x) / 6;
+    const c2y = p2.y - (p3.y - p1.y) / 6;
+    d += ` C ${c1x} ${c1y}, ${c2x} ${c2y}, ${p2.x} ${p2.y}`;
+  }
+  return d;
 }

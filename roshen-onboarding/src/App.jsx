@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { assemble, claimDaily, dailyOffer, formatLong } from './logic.js';
 import { useGame } from './store.jsx';
-import { Art, Confetti, Dialog, RoshenLogo, Stars, candyLabel } from './ui.jsx';
+import { Art, Confetti, Dialog, RoshenLogo, Stars, assetSrc, candyLabel } from './ui.jsx';
 import { HrView } from './views/HrView.jsx';
 import { LevelSheet } from './views/LevelSheet.jsx';
 import { MapView } from './views/MapView.jsx';
@@ -92,9 +92,15 @@ export function App() {
 
   const level = findLevel(model, route.levelId);
   const toast = game.state.toast;
+  const backdrop = assetSrc(game.manifest, 'worldBackground') || assetSrc(game.manifest, 'mapBackground');
 
   return (
     <>
+      {backdrop && (
+        <div className="page-backdrop" aria-hidden="true">
+          <img src={backdrop} alt="" />
+        </div>
+      )}
       <a className="skip" href="#main">До змісту</a>
       <header className="topbar">
         <h1 className="brand">
