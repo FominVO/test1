@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Art, Stars, initials } from '../ui.jsx';
+import { Art, Stars, assetSrc, initials } from '../ui.jsx';
+import { useGame } from '../store.jsx';
 import { formatLong, helpPerson } from '../logic.js';
 
 export function MapView({ model, onOpen, act, content, rewards }) {
+  const { manifest } = useGame();
+  const mapUrl = assetSrc(manifest, 'mapBackground');
+  const worldUrl = assetSrc(manifest, 'worldBackground');
   const [friendId, setFriendId] = useState(null);
 
   useEffect(() => {
@@ -27,7 +31,7 @@ export function MapView({ model, onOpen, act, content, rewards }) {
       </div>
       <div className="saga-column map-column">
         {model.worlds.map((world) => (
-          <WorldBand key={world.id} world={world} worlds={model.worlds} friendId={friendId} setFriendId={setFriendId} onOpen={onOpen} act={act} content={content} rewards={rewards} />
+          <WorldBand key={world.id} world={world} worlds={model.worlds} mapUrl={mapUrl} worldUrl={worldUrl} friendId={friendId} setFriendId={setFriendId} onOpen={onOpen} act={act} content={content} rewards={rewards} />
         ))}
         {model.horizon && <Horizon level={model.horizon} onOpen={onOpen} />}
       </div>
@@ -35,12 +39,19 @@ export function MapView({ model, onOpen, act, content, rewards }) {
   );
 }
 
-function WorldBand({ world, worlds, friendId, setFriendId, onOpen, act, content, rewards }) {
+function WorldBand({ world, worlds, mapUrl, worldUrl, friendId, setFriendId, onOpen, act, content, rewards }) {
   const points = layout(world.levels);
   const prev = world.index > 0 ? worlds[world.index - 1] : null;
-  const style = { '--zone': world.accent };
+  const artUrl = world.index % 2 === 0 ? (mapUrl || worldUrl) : (worldUrl || mapUrl);
+  const slice = worlds.length <= 1 ? 50 : (world.index / (worlds.length - 1)) * 100;
+  const stageTop = world.unlocked ? 132 : 214;
+  const height = stageTop + Math.max(520, points.length * 126);
+  const roadId = `road-${world.id}`;
+  const d = curveThrough(points);
   return (
-    <section className={`world-band ${world.unlocked ? '' : 'is-locked'}`} style={style} aria-labelledby={`world-${world.id}`}>
+    <section className={`world-band ${world.unlocked ? '' : 'is-locked'}`} style={{ '--zone': world.accent, '--stage-top': `${stageTop}px`, height: `${height}px` }} aria-labelledby={`world-${world.id}`}>
+      {artUrl && <img className="band-art" src={artUrl} alt="" style={{ objectPosition: `center ${slice}%` }} />}
+      <div className="band-fade" aria-hidden="true" />
       <header className="world-plaque">
         <p className="eyebrow">{world.kicker}</p>
         <h2 id={`world-${world.id}`}>{world.title}</h2>
@@ -50,10 +61,19 @@ function WorldBand({ world, worlds, friendId, setFriendId, onOpen, act, content,
       {!world.unlocked && prev && (
         <p className="gate">70% зірок «{prev.title}» ({prev.earnedStars}/{prev.maxStars}) або {formatLong(world.unlockDate)}. Хто не встиг зірками, все одно заходить у календарний день.</p>
       )}
-      <div className="path-stage" style={{ minHeight: `${Math.max(520, points.length * 128)}px` }}>
+      <div className="path-stage">
         <svg className="trail" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-          <path className="road" pathLength="100" d={curveThrough(points)} />
-          <path className="road-core" pathLength="100" d={curveThrough(points)} />
+          <defs>
+            <linearGradient id={roadId} x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stopColor="#6a3a16" />
+              <stop offset="0.42" stopColor="#f0c27a" />
+              <stop offset="0.55" stopColor="#fff1c9" />
+              <stop offset="1" stopColor="#8a5418" />
+            </linearGradient>
+          </defs>
+          <path className="road-gold" pathLength="100" d={d} />
+          <path className="road-body" pathLength="100" d={d} stroke={`url(#${roadId})`} />
+          <path className="road-dots" pathLength="100" d={d} />
         </svg>
         {points.map((level) => (
           <LevelNode key={level.id} level={level} onOpen={onOpen} friendId={friendId} setFriendId={setFriendId} act={act} content={content} rewards={rewards} />
