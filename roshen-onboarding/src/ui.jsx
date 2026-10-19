@@ -1,5 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { useGame } from './store.jsx';
+import { ROSHEN_LOGO_PATH } from './roshenLogoPath.js';
+
+export function RoshenLogo({ className = 'brand-logo' }) {
+  return (
+    <svg className={className} viewBox="0 0 169.8 40" role="img" aria-label="Roshen">
+      <path fill="currentColor" d={ROSHEN_LOGO_PATH} />
+    </svg>
+  );
+}
 
 export const C4 = {
   compliance: 'Відповідність',

@@ -6,6 +6,7 @@ import { formatLong, helpPerson } from '../logic.js';
 export function MapView({ model, onOpen, act, content, rewards }) {
   const { manifest } = useGame();
   const mapUrl = assetSrc(manifest, 'mapBackground');
+  const sideUrl = assetSrc(manifest, 'worldBackground');
   const [mapOk, setMapOk] = useState(Boolean(mapUrl));
   const [friendId, setFriendId] = useState(null);
 
@@ -37,11 +38,19 @@ export function MapView({ model, onOpen, act, content, rewards }) {
         <p>День {model.mine.dayNum} · {formatLong(model.asOf)}</p>
         <button type="button" className="btn tiny" onClick={() => document.getElementById('current-level')?.scrollIntoView({ block: 'center' })}>До мого кроку</button>
       </div>
-      <div className="map-column">
-        {model.worlds.map((world) => (
-          <WorldBand key={world.id} world={world} worlds={model.worlds} mapOk={mapOk} mapUrl={mapUrl} friendId={friendId} setFriendId={setFriendId} onOpen={onOpen} act={act} content={content} rewards={rewards} />
-        ))}
-        {model.horizon && <Horizon level={model.horizon} onOpen={onOpen} />}
+      <div className="saga">
+        <aside className="saga-side" aria-hidden="true">
+          {sideUrl && <img className="saga-side-art" src={sideUrl} alt="" />}
+        </aside>
+        <div className="saga-column map-column">
+          {model.worlds.map((world) => (
+            <WorldBand key={world.id} world={world} worlds={model.worlds} mapOk={mapOk} mapUrl={mapUrl} friendId={friendId} setFriendId={setFriendId} onOpen={onOpen} act={act} content={content} rewards={rewards} />
+          ))}
+          {model.horizon && <Horizon level={model.horizon} onOpen={onOpen} />}
+        </div>
+        <aside className="saga-side" aria-hidden="true">
+          {mapUrl && <img className="saga-side-art" src={mapUrl} alt="" />}
+        </aside>
       </div>
     </div>
   );
@@ -51,16 +60,20 @@ function WorldBand({ world, worlds, mapOk, mapUrl, friendId, setFriendId, onOpen
   const points = layout(world.levels);
   const fromTop = (worlds.length - 1 - world.index) / (worlds.length - 1);
   const prev = world.index > 0 ? worlds[world.index - 1] : null;
-  const style = mapOk && mapUrl ? {
+  const bandHeight = Math.max(760, points.length * 132);
+  const style = {
     '--zone': world.accent,
-    backgroundImage: `linear-gradient(180deg, rgba(255,248,238,.72), rgba(255,248,238,.18) 16%, rgba(255,248,238,.12) 70%, rgba(42,26,18,.22)), url(${mapUrl})`,
-    backgroundSize: '100% 100%, 100% 600%',
-    backgroundPosition: `center center, center ${fromTop * 100}%`,
-    backgroundRepeat: 'no-repeat',
-  } : { '--zone': world.accent, background: `linear-gradient(180deg, #fff8ee, ${world.accent})` };
+    height: `${bandHeight}px`,
+  };
   const d = points.map((point, index) => `${index ? 'L' : 'M'} ${point.x} ${point.y}`).join(' ');
   return (
-    <section className={`world-band ${world.unlocked ? '' : 'is-locked'}`} style={style} aria-labelledby={`world-${world.id}`}>
+    <section className={`world-band ${world.unlocked ? '' : 'is-locked'} ${mapOk ? '' : 'is-plain'}`} style={style} aria-labelledby={`world-${world.id}`}>
+      <div className="band-frame">
+        {mapOk && mapUrl && (
+          <img className="band-art" src={mapUrl} alt="" style={{ objectPosition: `center ${fromTop * 100}%` }} />
+        )}
+        <div className="band-shade" />
+      </div>
       <header className="world-plaque">
         <p className="eyebrow">{world.kicker}</p>
         <h2 id={`world-${world.id}`}>{world.title}</h2>
@@ -71,8 +84,8 @@ function WorldBand({ world, worlds, mapOk, mapUrl, friendId, setFriendId, onOpen
         <p className="gate">70% зірок «{prev.title}» ({prev.earnedStars}/{prev.maxStars}) або {formatLong(world.unlockDate)}. Хто не встиг зірками, все одно заходить у календарний день.</p>
       )}
       <svg className="trail" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-        <path className="road" d={d} />
-        <path className="road-core" d={d} />
+        <path className="road" pathLength="100" d={d} />
+        <path className="road-core" pathLength="100" d={d} />
       </svg>
       {points.map((level) => (
         <LevelNode key={level.id} level={level} onOpen={onOpen} friendId={friendId} setFriendId={setFriendId} act={act} content={content} rewards={rewards} />
@@ -152,8 +165,8 @@ function layout(levels) {
     const t = count === 1 ? 0.5 : index / (count - 1);
     return {
       ...level,
-      y: 80 - t * 54,
-      x: 46 + Math.sin(t * Math.PI * 2.15 + 0.4) * 24,
+      y: 76 - t * 56,
+      x: 50 + Math.sin(t * Math.PI * 2.2 + 0.5) * 18,
     };
   });
 }
