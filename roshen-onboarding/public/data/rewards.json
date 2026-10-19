@@ -1,0 +1,140 @@
+{
+  "currency": {
+    "id": "candies",
+    "name": "Цукерки",
+    "few": "цукерки",
+    "many": "цукерок"
+  },
+  "stars": {
+    "quizThreshold": 0.8,
+    "reflectionMinChars": 20,
+    "ladder": [
+      { "stars": 1, "id": "on_time", "label": "Рівень закрито вчасно" },
+      { "stars": 2, "id": "quality", "label": "Без нагадувань або квіз від 80%" },
+      { "stars": 3, "id": "excellence", "label": "Buddy чи керівник підтвердив якість, або є коротка рефлексія" }
+    ]
+  },
+  "worldGate": {
+    "starRatio": 0.7,
+    "calendarUnlockAlways": true,
+    "note": "Наступний світ відкривається на 70% зірок попереднього або в його календарний день. Ніхто не застрягає."
+  },
+  "xp": {
+    "perLevel": 20,
+    "perStar": 15,
+    "help": 25
+  },
+  "candies": {
+    "perLevel": 8,
+    "perStar": 4,
+    "helpColleague": 12,
+    "daily": 10,
+    "dailyCorrectBonus": 4
+  },
+  "streak": {
+    "weekendFreezes": true,
+    "sickLeaveFreezes": true,
+    "vacationFreezes": true,
+    "neverBurns": true
+  },
+  "help": {
+    "boosterEvery": 2,
+    "boosterId": "hint"
+  },
+  "boosters": [
+    {
+      "id": "hint",
+      "name": "Підказка",
+      "description": "Коротко підказує, на що дивитися в завданні.",
+      "cost": 15,
+      "sources": ["Допомога колезі", "Подарунок buddy"]
+    },
+    {
+      "id": "expert",
+      "name": "Контакт експерта",
+      "description": "Показує людину, яка відповідає за тему, і як її написати.",
+      "cost": 20,
+      "sources": ["Подарунок buddy", "Магазин"]
+    },
+    {
+      "id": "skip",
+      "name": "Пропустити рутину",
+      "description": "Закриває лише рутинний чекліст. Не діє на навчання, зустрічі, безпеку і зміну на фабриці.",
+      "cost": 30,
+      "sources": ["Подарунок buddy", "Магазин"]
+    }
+  ],
+  "rewards": [
+    {
+      "id": "gift-set",
+      "name": "Подарунковий набір Roshen",
+      "description": "Заявка в HR на фірмовий набір. Це прохання, не автоматична видача.",
+      "cost": 180,
+      "kind": "hr-request"
+    },
+    {
+      "id": "merch",
+      "name": "Мерч команди",
+      "description": "Заявка в HR на мерч майданчика.",
+      "cost": 120,
+      "kind": "hr-request"
+    }
+  ],
+  "badges": [
+    {
+      "id": "first_day",
+      "asset": "badges.first_day",
+      "name": "Солодкий старт",
+      "detail": "Закрито обовʼязковий шлях першого дня.",
+      "levelId": "w1-safety-quiz"
+    },
+    {
+      "id": "factory_tour",
+      "asset": "badges.factory_tour",
+      "name": "Зміна на фабриці",
+      "detail": "Пройдено зміну і дегустацію.",
+      "levelId": "w1-factory"
+    },
+    {
+      "id": "buddy",
+      "asset": "badges.buddy",
+      "name": "Пліч-о-пліч",
+      "detail": "Відбулась перша щотижнева зустріч із buddy.",
+      "levelId": "w2-buddy-1"
+    },
+    {
+      "id": "first_week",
+      "asset": "badges.first_week",
+      "name": "Перший тиждень",
+      "detail": "Закрито цілі першого тижня.",
+      "levelId": "w2-goals"
+    },
+    {
+      "id": "first_project",
+      "asset": "badges.first_project",
+      "name": "Чекпоінт 30",
+      "detail": "Відбувся check-in 30 днів.",
+      "levelId": "w3-checkin-30"
+    },
+    {
+      "id": "day_60",
+      "asset": "badges.day_60",
+      "name": "Чекпоінт 60",
+      "detail": "Відбувся check-in 60 днів.",
+      "levelId": "w4-checkin-60"
+    },
+    {
+      "id": "hero_90_days",
+      "asset": "badges.hero_90_days",
+      "name": "90 днів",
+      "detail": "Завершено check-in випробувального.",
+      "levelId": "w5-checkin-90"
+    }
+  ],
+  "ranks": [
+    { "xp": 0, "name": "Стажер смаку" },
+    { "xp": 300, "name": "Підмайстер цеху" },
+    { "xp": 600, "name": "Майстер зміни" },
+    { "xp": 900, "name": "Хранитель рецепта" }
+  ]
+}

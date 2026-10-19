@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "note": "Покладіть файли дизайнера за цими шляхами (відносно теки порталу). Якщо файл не відкриється, інтерфейс покаже оригінальну SVG-заглушку.",
+  "mapBackground": "assets/creative/map.webp",
+  "worldBackground": "assets/creative/world_bg.webp",
+  "mascot": "assets/creative/mascot.webp",
+  "levelComplete": "assets/creative/level_complete.webp",
+  "icons": {
+    "buddy": "assets/creative/icons/buddy.webp",
+    "checkin": "assets/creative/icons/checkin.webp",
+    "first_project": "assets/creative/icons/first_project.webp",
+    "key_event": "assets/creative/icons/key_event.webp",
+    "manager_star": "assets/creative/icons/manager_star.webp",
+    "meeting": "assets/creative/icons/meeting.webp",
+    "task": "assets/creative/icons/task.webp",
+    "team_lunch": "assets/creative/icons/team_lunch.webp",
+    "training": "assets/creative/icons/training.webp"
+  },
+  "badges": {
+    "buddy": "assets/creative/badges/buddy.webp",
+    "factory_tour": "assets/creative/badges/factory_tour.webp",
+    "first_day": "assets/creative/badges/first_day.webp",
+    "first_project": "assets/creative/badges/first_project.webp",
+    "first_week": "assets/creative/badges/first_week.webp",
+    "hero_90_days": "assets/creative/badges/hero_90_days.webp",
+    "day_60": null
+  }
+}

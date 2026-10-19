@@ -1,4 +1,4 @@
-name: Deploy s2s-demo to GitHub Pages
+name: Deploy GitHub Pages
 
 on:
   push:
@@ -24,15 +24,33 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: roshen-onboarding/package-lock.json
+
+      - name: Test and build onboarding portal
+        working-directory: roshen-onboarding
+        run: npm ci && npm test && npm run build
+
+      - name: Assemble site
+        run: |
+          mkdir -p _site/roshen-onboarding
+          cp -a s2s-demo/. _site/
+          cp -a roshen-onboarding/dist/. _site/roshen-onboarding/
+          touch _site/.nojekyll
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
         with:
           enablement: true
 
-      - name: Upload s2s-demo artifact
+      - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: s2s-demo
+          path: _site
 
       - name: Deploy to GitHub Pages
         id: deployment
