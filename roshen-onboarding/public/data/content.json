@@ -1,0 +1,224 @@
+{
+  "meta": {
+    "company": "Roshen",
+    "product": "Адаптація",
+    "asOf": "2026-10-19",
+    "locale": "uk-UA",
+    "seedVersion": 1
+  },
+  "currentUserId": "olena",
+  "cohortGoal": {
+    "id": "product",
+    "title": "Уся когорта знає продукти",
+    "detail": "Спільна ціль, не гонка: кожен новачок проходить курс і квіз про продукцію.",
+    "levelId": "w2-quiz"
+  },
+  "managerLevel0": [
+    { "id": "discuss_role", "title": "Обговорити роль і очікування", "detail": "Що людина робитиме в перші місяці і як виглядає добрий результат." },
+    { "id": "assign_buddy", "title": "Призначити buddy", "detail": "Людина з контекстом ролі, яка має час зустрічатися щотижня." },
+    { "id": "networking", "title": "Допомогти з нетворкінгом", "detail": "Пʼять людей і тепле представлення, не список прізвищ у повітрі." },
+    { "id": "schedule_checkins", "title": "Запланувати check-in на 6 місяців", "detail": "Щомісяця: 30, 60, 90, 120, 150 і 180 днів." },
+    { "id": "open_dialogue", "title": "Відкрити діалог", "detail": "Домовитись, як ставити питання і просити фідбек без страху виглядати повільним." }
+  ],
+  "worlds": [
+    { "id": "w0", "title": "Преонбординг", "short": "До старту", "kicker": "Епізод 0", "unlockDay": -13, "accent": "#6B3E26", "summary": "До першого дня: документи, правила і знайомство з buddy." },
+    { "id": "w1", "title": "Перший день", "short": "День 1", "kicker": "Епізод 1", "unlockDay": 1, "accent": "#C45B78", "summary": "Вітання, доступи і обовʼязкова зміна на фабриці." },
+    { "id": "w2", "title": "Перший тиждень", "short": "Тиждень", "kicker": "Епізод 2", "unlockDay": 2, "accent": "#D8893A", "summary": "Продукт, інструменти, buddy і розмова з керівником." },
+    { "id": "w3", "title": "Перший місяць", "short": "Місяць", "kicker": "Епізод 3", "unlockDay": 8, "accent": "#2F8F55", "summary": "Темп другого тижня, перший внесок і пульс 30." },
+    { "id": "w4", "title": "60 днів", "short": "60 днів", "kicker": "Епізод 4", "unlockDay": 31, "accent": "#6E5AA8", "summary": "Свій ритм роботи і чекпоінт із керівником." },
+    { "id": "w5", "title": "90 днів", "short": "90 днів", "kicker": "Епізод 5", "unlockDay": 61, "accent": "#C7962E", "summary": "Завершення випробувального і демо-день." }
+  ],
+  "levels": [
+    { "id": "w0-guide", "worldId": "w0", "type": "reading", "c4": "clarification", "icon": "task", "title": "Гід новачка", "summary": "Як влаштований портал і перші два тижні.", "dueDay": -10, "reminderDay": -8, "hint": "Зверни увагу на модель 4C: відповідність, прояснення, культура, звʼязок.", "expert": { "name": "Катерина Литвин", "role": "HR-партнерка адаптації", "channel": "Teams · катерина.литвин" }, "paragraphs": ["Цей шлях не гонка і не гра на вибування. Кожен рівень — реальна справа адаптації: документ, розмова, курс або опитування.", "Чотири опори: відповідність (правила і безпека), прояснення (роль і очікування), культура (як тут працюють) і звʼязок (люди, включно з buddy)."] },
+    { "id": "w0-docs", "worldId": "w0", "type": "checklist", "c4": "compliance", "icon": "task", "title": "Документи до дня 1", "summary": "Анкетні дані й підпис політик ще до прохідної.", "dueDay": -7, "reminderDay": -5, "hint": "Паспорт і довідка про рахунок — найчастіше те, чого бракує вранці першого дня.", "expert": { "name": "Олег Савченко", "role": "Кадровий супровід", "channel": "Teams · олег.савченко" }, "items": ["Перевірити персональні дані в анкеті", "Підписати трудовий договір і посадову", "Підтвердити політики конфіденційності та охорони праці"] },
+    { "id": "w0-policy", "worldId": "w0", "type": "reading", "c4": "compliance", "icon": "training", "title": "Політика харчової безпеки", "summary": "Базові правила майданчика ще до екскурсії.", "dueDay": -6, "reminderDay": -4, "hint": "Прикраси, нігті й самопочуття — три речі, про які питають на вході в цех.", "expert": { "name": "Ірина Палій", "role": "Харчова безпека", "channel": "Teams · ірина.палій" }, "paragraphs": ["На кондитерському майданчику гігієна — частина смаку. Перед зоною виробництва знімають прикраси, ховають волосся і миють руки за інструкцією зміни.", "Якщо зранку є температура, шлунок або відкрита рана на руці, про це кажуть керівнику до входу в цех. Це захист продукту і людей, не формальність."] },
+    { "id": "w0-video", "worldId": "w0", "type": "video", "c4": "culture", "icon": "training", "title": "Історія та цінності", "summary": "Короткий курс: хто ми і як говоримо про якість.", "dueDay": -5, "reminderDay": -3, "hint": "Запамʼятай три українські майданчики: Київ, Вінниця, Кременчук.", "expert": { "name": "Наталія Гриценко", "role": "Buddy, маркетинг", "channel": "Teams · наталія.гриценко" }, "chapters": [{ "title": "Українська кондитерська справа", "body": "Roshen — українська кондитерська компанія. У портфелі шоколад, цукерки, торти, печиво і карамель. Новачку важливо знати не слоган, а категорії, якими користуються люди." }, { "title": "Майданчики", "body": "Ключові фабрики в Україні — Київ, Вінниця і Кременчук. Офісні ролі теж проводять день поруч із лінією: смак народжується там." }, { "title": "Як звучить якість", "body": "Якість тут — це зупинити крок, якщо зразок сумнівний. Краще запитати зміну, ніж вигадати відповідь для гостя чи мережі." }] },
+    { "id": "w0-quiz", "worldId": "w0", "type": "quiz", "c4": "clarification", "icon": "task", "title": "Квіз: опори адаптації", "summary": "Чотири опори і навіщо вони в перші тижні.", "dueDay": -4, "reminderDay": -2, "hint": "4C: відповідність, прояснення, культура, звʼязок.", "expert": { "name": "Катерина Литвин", "role": "HR-партнерка адаптації", "channel": "Teams · катерина.литвин" }, "questions": [{ "q": "Що дає преонбординг до дня 1?", "choices": ["Замінює весь випробувальний термін", "Прибирає дрібну невідомість ще до прохідної", "Перевіряє швидкість друку"], "answer": 1 }, { "q": "Яка опора про правила і безпеку?", "choices": ["Звʼязок", "Відповідність", "Культура"], "answer": 1 }, { "q": "Навіщо buddy в перші тижні?", "choices": ["Щоб замінити керівника", "Щоб дати контекст, якого немає в політиці", "Щоб вести табель"], "answer": 1 }] },
+    { "id": "w0-buddy", "worldId": "w0", "type": "meeting", "c4": "connection", "icon": "buddy", "title": "Знайомство з buddy", "summary": "Коротка зустріч ще до першого ранку.", "dueDay": -3, "reminderDay": -2, "hint": "Запитай, кому писати, якщо загубишся в перший день між прохідною і кімнатою.", "expert": { "name": "Наталія Гриценко", "role": "Buddy", "channel": "Teams · наталія.гриценко" }, "meeting": { "time": "17:00", "durationMin": 30, "place": "Онлайн", "agenda": "Хто є хто, як виглядає перший ранок, які три питання взяти з собою." } },
+    { "id": "w0-questions", "worldId": "w0", "type": "checklist", "c4": "clarification", "icon": "task", "title": "Питання на перший день", "summary": "Три питання, щоб день 1 не розчинився в екскурсіях.", "dueDay": -1, "reminderDay": -1, "hint": "Одне питання про роль, одне про людей, одне про те, як просити допомогу.", "expert": { "name": "Тарас Лисенко", "role": "Керівник", "channel": "Teams · тарас.лисенко" }, "items": ["Записати питання про роль на перші 90 днів", "Записати, кого хочеш зрозуміти в команді", "Уточнити, в якому каналі нормально писати «я застрягла»"] },
+
+    { "id": "w1-welcome", "worldId": "w1", "type": "meeting", "c4": "connection", "icon": "key_event", "title": "Welcome-зустріч", "summary": "Команда зустрічає тебе вранці першого дня.", "dueDay": 1, "reminderDay": 1, "hint": "Імена достатньо повторити ввечері. Вдень важливіше впіймати, хто за що відповідає.", "expert": { "name": "Тарас Лисенко", "role": "Керівник", "channel": "Teams · тарас.лисенко" }, "meeting": { "time": "10:00", "durationMin": 60, "place": "Кімната команди", "agenda": "Вітання, карта команди, як влаштований перший тиждень." } },
+    { "id": "w1-access", "worldId": "w1", "type": "checklist", "c4": "compliance", "icon": "task", "title": "Доступи", "summary": "Пошта, перепустка, системи команди.", "dueDay": 1, "reminderDay": 1, "hint": "Якщо перепустка не відкриває турнікет, це до офіс-менеджера, не до buddy.", "expert": { "name": "Марко Діденко", "role": "ІТ-підтримка майданчика", "channel": "Teams · марко.діденко" }, "items": ["Увійти в пошту і календар", "Перевірити перепустку на турнікеті", "Відкрити робочий простір команди"] },
+    { "id": "w1-team", "worldId": "w1", "type": "meeting", "c4": "connection", "icon": "team_lunch", "title": "Команда і обід", "summary": "Екскурсія офісом і спільний стіл.", "dueDay": 1, "reminderDay": 1, "hint": "Сядь не лише з buddy. Одне нове імʼя за обідом уже звʼязок.", "expert": { "name": "Наталія Гриценко", "role": "Buddy", "channel": "Teams · наталія.гриценко" }, "meeting": { "time": "12:30", "durationMin": 90, "place": "Їдальня майданчика", "agenda": "Хто де сидить, де кава, перший спільний обід." } },
+    { "id": "w1-factory", "worldId": "w1", "type": "checklist", "c4": "culture", "icon": "training", "title": "Зміна на фабриці / дегустація", "summary": "Обовʼязковий епізод: гігієна, лінія і три зразки.", "dueDay": 1, "reminderDay": 1, "mandatory": true, "hint": "Запиши смак простими словами: солодкість, горіх, кислота, текстура. Цього досить.", "expert": { "name": "Петро Данилюк", "role": "Майстер зміни", "channel": "Рація зміни або через buddy" }, "items": ["Пройти гігієнічний інструктаж", "Одягнути відвідувацький комплект", "Пройти лінію з майстром зміни", "Продегустувати три зразки і записати враження", "Поставити зміні одне питання"], "meeting": { "time": "14:30", "durationMin": 150, "place": "Екскурсійний маршрут фабрики", "agenda": "Гігієна, прохід уздовж лінії, дегустаційна панель із трьох зразків." } },
+    { "id": "w1-safety", "worldId": "w1", "type": "video", "c4": "compliance", "icon": "training", "title": "Тренінг харчової безпеки", "summary": "Короткі сцени: руки, алергени, сумнівний зразок.", "dueDay": 1, "reminderDay": 2, "hint": "Алерген не «дрібниця на етикетці». Якщо не впевнена — зупинись і поклич зміну.", "expert": { "name": "Ірина Палій", "role": "Харчова безпека", "channel": "Teams · ірина.палій" }, "chapters": [{ "title": "Руки і комплект", "body": "Миття рук, сітка, бахіли. Відвідувач не торкається продукту без дозволу зміни." }, { "title": "Алергени", "body": "Горіх, молоко, глютен живуть на різних лініях не випадково. Перехресний контакт — тема розмови, не жарту." }, { "title": "Сумнівний зразок", "body": "Побачила крихту, сторонній запах чи збитий режим — кажеш майстру. Героїзм тут у зупинці, не в мовчанні." }] },
+    { "id": "w1-safety-quiz", "worldId": "w1", "type": "quiz", "c4": "compliance", "icon": "training", "title": "Квіз безпеки", "summary": "Перевірка після тренінгу. Можна перескласти.", "dueDay": 2, "reminderDay": 2, "hint": "Правильна відповідь майже завжди «зупинись і скажи», а не «розберись сам».", "expert": { "name": "Ірина Палій", "role": "Харчова безпека", "channel": "Teams · ірина.палій" }, "questions": [{ "q": "Перед входом у цех першим ділом:", "choices": ["Зробити фото лінії", "Пройти гігієну і одягнути комплект", "Спробувати продукт із стрічки"], "answer": 1 }, { "q": "Сумнівний зразок на лінії. Що далі?", "choices": ["Прибрати тихо, щоб не зупиняти план", "Сказати майстру зміни", "Написати в чат після зміни"], "answer": 1 }, { "q": "Навіщо окремі лінії для алергенів?", "choices": ["Так гарніше на екскурсії", "Щоб зменшити перехресний контакт", "Це лише традиція"], "answer": 1 }] },
+    { "id": "w1-bonus", "worldId": "w1", "type": "match3", "bonus": true, "c4": "culture", "icon": "task", "title": "Бонус: Солодка лінія", "summary": "Коротка лінія трьох у ряд. Без життів і без штрафу.", "dueDay": 3, "hint": "Збирай по три однакові: праліне, карамель, ягоду, мʼяту або вафлю.", "expert": { "name": "Пралінка", "role": "Гід порталу", "channel": "Вона живе на мапі" }, "match": { "target": 350, "moves": 18 } },
+
+    { "id": "w2-product", "worldId": "w2", "type": "reading", "c4": "clarification", "icon": "training", "title": "Курс про продукцію", "summary": "Категорії, якими Roshen говорить зі споживачем.", "dueDay": 3, "reminderDay": 3, "hint": "Не вчи артикули. Зрозумій категорії і кому вони смакують.", "expert": { "name": "Наталія Гриценко", "role": "Buddy, маркетинг", "channel": "Teams · наталія.гриценко" }, "paragraphs": ["Портфель тримається на знайомих категоріях: шоколад, цукерки, торти й тістечка, печиво, карамель. Торт «Київський» — один із продуктів, через який компанію впізнають за межами категорії плитки.", "На дегустації описуй смак конкретно. «Смачно» не допомагає ні зміні, ні бренду. «Молочний, з горіхом, щільна начинка» — допомагає."] },
+    { "id": "w2-quiz", "worldId": "w2", "type": "quiz", "c4": "clarification", "icon": "training", "title": "Квіз: знавець продукції", "summary": "Коротко про категорії. Це спільна ціль когорти.", "dueDay": 4, "reminderDay": 4, "hint": "Торт «Київський», шоколад, цукерки, печиво, карамель. Майданчики: Київ, Вінниця, Кременчук.", "expert": { "name": "Наталія Гриценко", "role": "Buddy", "channel": "Teams · наталія.гриценко" }, "questions": [{ "q": "Roshen — це", "choices": ["Мережа кавʼярень", "Українська кондитерська компанія", "Виробник лише морозива"], "answer": 1 }, { "q": "Який торт особливо асоціюється з компанією?", "choices": ["Торт «Київський»", "Наполеон із сусідньої пекарні", "Сирник"], "answer": 0 }, { "q": "Де в Україні основні фабрики?", "choices": ["Лише в одному місті", "Київ, Вінниця, Кременчук", "Тільки за кордоном"], "answer": 1 }] },
+    { "id": "w2-buddy-1", "worldId": "w2", "type": "meeting", "buddyWeekly": true, "week": 1, "c4": "connection", "icon": "buddy", "title": "Buddy · тиждень 1", "summary": "Перша регулярна зустріч. Далі вони щотижня.", "dueDay": 5, "reminderDay": 5, "hint": "Принеси одне «я не зрозуміла», а не звіт про всі завдання.", "expert": { "name": "Наталія Гриценко", "role": "Buddy", "channel": "Teams · наталія.гриценко" }, "meeting": { "time": "16:00", "durationMin": 30, "place": "Кімната або онлайн", "agenda": "Як минув день 1, що незрозуміло, кого ще познайомити." } },
+    { "id": "w2-workplace", "worldId": "w2", "type": "checklist", "routine": true, "c4": "compliance", "icon": "task", "title": "Службові дрібниці", "summary": "Рутина столу і профілю. Її можна закрити бустером.", "dueDay": 5, "reminderDay": 6, "hint": "Фото в довіднику економить знайомствам незручне «а ви хто?».", "expert": { "name": "Марко Діденко", "role": "ІТ-підтримка", "channel": "Teams · марко.діденко" }, "items": ["Поставити фото і посаду в довіднику", "Додати підпис у пошті", "Перевірити, що календар показує зайнятість"] },
+    { "id": "w2-processes", "worldId": "w2", "type": "reading", "c4": "clarification", "icon": "task", "title": "Як команда веде справи", "summary": "Де живуть задачі, як просимо ревʼю, коли ескалюємо.", "dueDay": 6, "reminderDay": 6, "hint": "Питання «де це лежить?» краще за мовчазне блукання папками.", "expert": { "name": "Тарас Лисенко", "role": "Керівник", "channel": "Teams · тарас.лисенко" }, "paragraphs": ["Задачі команди живуть у спільному просторі, не в особистих нотатках. Якщо береш справу — вона має видимого власника і дату.", "Ревʼю просять рано, маленьким шматком. Ескалація — це не скарга, а спосіб не тримати ризик наодинці."] },
+    { "id": "w2-manager", "worldId": "w2", "type": "meeting", "c4": "clarification", "icon": "checkin", "title": "1:1 з керівником", "summary": "Очікування на тиждень і на 90 днів.", "dueDay": 7, "reminderDay": 6, "hint": "Запитай: «що для вас буде добрим першим місяцем?» і запиши відповідь своїми словами.", "expert": { "name": "Тарас Лисенко", "role": "Керівник", "channel": "Teams · тарас.лисенко" }, "meeting": { "time": "11:00", "durationMin": 45, "place": "Кімната керівника", "agenda": "Роль, перший видимий результат, як часто зустрічаємось." } },
+    { "id": "w2-goals", "worldId": "w2", "type": "checklist", "c4": "clarification", "icon": "first_project", "title": "Цілі на тиждень", "summary": "Три домовленості, які видно команді.", "dueDay": 7, "reminderDay": 7, "hint": "Ціль має вміститися в одне речення і мати дату.", "expert": { "name": "Тарас Лисенко", "role": "Керівник", "channel": "Teams · тарас.лисенко" }, "items": ["Сформулювати три результати тижня", "Погодити їх із керівником", "Покласти їх туди, де їх бачить buddy"] },
+    { "id": "w2-bonus", "worldId": "w2", "type": "match3", "bonus": true, "c4": "culture", "icon": "task", "title": "Бонус: Цех трьох", "summary": "Ще одна солодка лінія після курсу про продукт.", "dueDay": 7, "hint": "Довгий ряд дає більше очок, ніж три окремі трійки.", "expert": { "name": "Пралінка", "role": "Гід порталу", "channel": "Вона живе на мапі" }, "match": { "target": 420, "moves": 16 } },
+
+    { "id": "w3-buddy-2", "worldId": "w3", "type": "meeting", "buddyWeekly": true, "week": 2, "c4": "connection", "icon": "buddy", "title": "Buddy · тиждень 2", "summary": "Друга обовʼязкова зустріч. Контекст накопичується.", "dueDay": 12, "reminderDay": 11, "hint": "Тема тижня: що я боюсь запитати вдруге.", "expert": { "name": "Наталія Гриценко", "role": "Buddy", "channel": "Teams · наталія.гриценко" }, "meeting": { "time": "16:00", "durationMin": 30, "place": "Кімната або онлайн", "agenda": "Що прояснилось, де ще потрібен контекст, кого познайомити." } },
+    { "id": "w3-week2", "worldId": "w3", "type": "checklist", "c4": "clarification", "icon": "checkin", "title": "Тиждень 2: візьми темп", "summary": "Самонагадування: питання, фідбек і регулярні 1:1.", "dueDay": 14, "reminderDay": 13, "hint": "Надішли керівнику три питання заздалегідь. Тоді 1:1 буде про суть.", "expert": { "name": "Тарас Лисенко", "role": "Керівник", "channel": "Teams · тарас.лисенко" }, "items": ["Постав запитання, які накопичились", "Попроси зворотний звʼязок про перші дні", "Домовся про регулярні 1:1"] },
+    { "id": "w3-network", "worldId": "w3", "type": "checklist", "c4": "connection", "icon": "team_lunch", "title": "Дві кави з колегами", "summary": "Нетворкінг, який обіцяв керівник у рівні 0.", "dueDay": 18, "reminderDay": 16, "hint": "Проси 20 хвилин і конкретну тему, не «коли буде час познайомитись».", "expert": { "name": "Наталія Гриценко", "role": "Buddy", "channel": "Teams · наталія.гриценко" }, "items": ["Зустрітися з людиною з сусідньої функції", "Зустрітися з людиною з майданчика або зміни", "Коротко записати, чим кожна з них може бути корисна"] },
+    { "id": "w3-buddy-3", "worldId": "w3", "type": "meeting", "buddyWeekly": true, "week": 3, "c4": "connection", "icon": "buddy", "title": "Buddy · тиждень 3", "summary": "Третя зустріч: уже можна говорити про внесок, не лише про вхід.", "dueDay": 19, "reminderDay": 18, "hint": "Запитай buddy, який маленький результат буде помітний команді до дня 30.", "expert": { "name": "Наталія Гриценко", "role": "Buddy", "channel": "Teams · наталія.гриценко" }, "meeting": { "time": "16:00", "durationMin": 30, "place": "Кімната або онлайн", "agenda": "Перший внесок, перепони, хто ще потрібен." } },
+    { "id": "w3-culture", "worldId": "w3", "type": "reading", "c4": "culture", "icon": "team_lunch", "title": "Ритуали команди", "summary": "Як тут святкують, сперечаються і кличуть на допомогу.", "dueDay": 21, "reminderDay": 20, "hint": "Ритуал — це повторювана дія, не плакат. Знайди один живий.", "expert": { "name": "Наталія Гриценко", "role": "Buddy", "channel": "Teams · наталія.гриценко" }, "paragraphs": ["У команд Roshen різні ритми: дегустація зразка перед рішенням, коротка планарна зміни, спільний обід після запуску. Дізнайся ритуал своєї команди в buddy, не з брошури.", "Сперечатися про смак нормально, якщо є зразок і нотатка. Особисті ярлики — ні."] },
+    { "id": "w3-project", "worldId": "w3", "type": "checklist", "c4": "clarification", "icon": "first_project", "title": "Перший внесок", "summary": "Маленька справа, яку команда може показати.", "dueDay": 24, "reminderDay": 22, "hint": "Внесок менший за твій страх. Краще закінчений абзац, ніж грандіозний план.", "expert": { "name": "Тарас Лисенко", "role": "Керівник", "channel": "Teams · тарас.лисенко" }, "items": ["Обрати справу разом із керівником", "Зробити першу видиму версію", "Отримати короткий відгук"] },
+    { "id": "w3-buddy-4", "worldId": "w3", "type": "meeting", "buddyWeekly": true, "week": 4, "c4": "connection", "icon": "buddy", "title": "Buddy · тиждень 4", "summary": "Перед пульсом 30: що сказати чесно.", "dueDay": 26, "reminderDay": 25, "hint": "Пульс не впливає на зірки. Низька оцінка — сигнал, не провина.", "expert": { "name": "Наталія Гриценко", "role": "Buddy", "channel": "Teams · наталія.гриценко" }, "meeting": { "time": "16:00", "durationMin": 30, "place": "Кімната або онлайн", "agenda": "Як заповнити пульс чесно і що підняти на check-in 30." } },
+    { "id": "w3-pulse-30", "worldId": "w3", "type": "pulse", "wave": "30", "c4": "culture", "icon": "checkin", "title": "Пульс: день 30", "summary": "Три осі: інструменти, продуктивність, культура. Без правильних відповідей.", "dueDay": 30, "reminderDay": 28, "hint": "Оцінка 2 — теж корисна. Вона не знімає зірки і не псує серію.", "expert": { "name": "Катерина Литвин", "role": "HR-партнерка", "channel": "Teams · катерина.литвин" }, "meeting": { "time": "09:30", "durationMin": 15, "place": "Форма в цьому порталі", "agenda": "Короткий пульс за трьома осями. Можна пропустити коментар." } },
+    { "id": "w3-checkin-30", "worldId": "w3", "type": "meeting", "c4": "clarification", "icon": "checkin", "title": "Check-in 30", "summary": "Місяць потому: що вже виходить і що заважає.", "dueDay": 30, "reminderDay": 28, "hint": "Візьми один приклад внеску і одне прохання про допомогу.", "expert": { "name": "Тарас Лисенко", "role": "Керівник", "channel": "Teams · тарас.лисенко" }, "meeting": { "time": "11:00", "durationMin": 45, "place": "Кімната керівника", "agenda": "Перший місяць, перепони, корекція цілей на 90 днів." } },
+    { "id": "w3-goals-90", "worldId": "w3", "type": "checklist", "c4": "clarification", "icon": "first_project", "title": "Цілі на 90 днів", "summary": "Три результати до кінця випробувального.", "dueDay": 32, "reminderDay": 30, "hint": "Одна ціль про справу, одна про навичку, одна про людей.", "expert": { "name": "Тарас Лисенко", "role": "Керівник", "channel": "Teams · тарас.лисенко" }, "items": ["Записати три результати до дня 90", "Погодити мірило «готово»", "Покласти цілі в нотатку 1:1"] },
+
+    { "id": "w4-buddy-5", "worldId": "w4", "type": "meeting", "buddyWeekly": true, "week": 5, "c4": "connection", "icon": "buddy", "title": "Buddy · тиждень 5", "summary": "Середина шляху. Зустрічі не скасовують, навіть якщо вже «влетіла».", "dueDay": 33, "reminderDay": 32, "hint": "Запитай, який контекст досі є лише в головах старожилів.", "expert": { "name": "Наталія Гриценко", "role": "Buddy", "channel": "Teams · наталія.гриценко" }, "meeting": { "time": "16:00", "durationMin": 30, "place": "Кімната або онлайн", "agenda": "Неписані правила і де я вже працюю сама." } },
+    { "id": "w4-buddy-6", "worldId": "w4", "type": "meeting", "buddyWeekly": true, "week": 6, "c4": "connection", "icon": "buddy", "title": "Buddy · тиждень 6", "summary": "Шоста зустріч.", "dueDay": 40, "reminderDay": 39, "hint": "Принеси чорновий результат, не презентацію.", "expert": { "name": "Наталія Гриценко", "role": "Buddy", "channel": "Teams · наталія.гриценко" }, "meeting": { "time": "16:00", "durationMin": 30, "place": "Кімната або онлайн", "agenda": "Чорновик внеску і де потрібне друге око." } },
+    { "id": "w4-buddy-7", "worldId": "w4", "type": "meeting", "buddyWeekly": true, "week": 7, "c4": "connection", "icon": "buddy", "title": "Buddy · тиждень 7", "summary": "Сьома зустріч.", "dueDay": 47, "reminderDay": 46, "hint": "Попроси buddy назвати одну звичку, яку варто залишити після випробувального.", "expert": { "name": "Наталія Гриценко", "role": "Buddy", "channel": "Teams · наталія.гриценко" }, "meeting": { "time": "16:00", "durationMin": 30, "place": "Кімната або онлайн", "agenda": "Звички, які вже працюють." } },
+    { "id": "w4-buddy-8", "worldId": "w4", "type": "meeting", "buddyWeekly": true, "week": 8, "c4": "connection", "icon": "buddy", "title": "Buddy · тиждень 8", "summary": "Восьма зустріч перед чекпоінтом 60.", "dueDay": 54, "reminderDay": 53, "hint": "Збери два факти для check-in: що зроблено і що заважає.", "expert": { "name": "Наталія Гриценко", "role": "Buddy", "channel": "Teams · наталія.гриценко" }, "meeting": { "time": "16:00", "durationMin": 30, "place": "Кімната або онлайн", "agenda": "Підготовка до check-in 60." } },
+    { "id": "w4-training", "worldId": "w4", "type": "video", "c4": "clarification", "icon": "training", "title": "Поглиблений курс категорії", "summary": "Як читати смак і бриф, а не лише назву SKU.", "dueDay": 45, "reminderDay": 42, "hint": "Порівняй два зразки однієї категорії. Різниця важливіша за оцінку «смачно».", "expert": { "name": "Соломія Верес", "role": "Технолог дегустацій", "channel": "Teams · соломія.верес" }, "chapters": [{ "title": "Бриф смаку", "body": "Бриф каже, для кого продукт і яку роботу він виконує: перекус, подарунок, святковий стіл." }, { "title": "Порівняння", "body": "Два зразки поруч вчать більше, ніж один у вакуумі. Нотуй текстуру, солодкість, післясмак." }, { "title": "Мова для мережі", "body": "Те, що ти можеш пояснити продавцю одним реченням, зазвичай уже зрозуміле і тобі." }] },
+    { "id": "w4-help", "worldId": "w4", "type": "checklist", "c4": "connection", "icon": "buddy", "title": "Підтримай новачка", "summary": "Допомога колезі дає цукерки. Це не рейтинг.", "dueDay": 50, "reminderDay": 48, "hint": "На мапі в аватара колеги є «Підтримати». Можна і живою розмовою.", "expert": { "name": "Катерина Литвин", "role": "HR-партнерка", "channel": "Teams · катерина.литвин" }, "items": ["Обрати людину з когорти", "Допомогти з одним конкретним кроком", "Не порівнювати, хто швидший"] },
+    { "id": "w4-directory", "worldId": "w4", "type": "checklist", "routine": true, "c4": "compliance", "icon": "task", "title": "Картка в довіднику", "summary": "Рутинне оновлення профілю. Можна закрити бустером.", "dueDay": 36, "reminderDay": 34, "hint": "Навички пиши так, щоб сусідня команда зрозуміла, з чим до тебе приходити.", "expert": { "name": "Олег Савченко", "role": "Кадровий супровід", "channel": "Teams · олег.савченко" }, "items": ["Оновити навички", "Додати майданчик і графік", "Перевірити телефон для зміни"] },
+    { "id": "w4-checkin-60", "worldId": "w4", "type": "meeting", "c4": "clarification", "icon": "checkin", "title": "Check-in 60", "summary": "Два місяці: чи цілі на 90 ще живі.", "dueDay": 60, "reminderDay": 57, "hint": "Якщо ціль померла — скажи це вголос. Тиша не зберігає зірки.", "expert": { "name": "Тарас Лисенко", "role": "Керівник", "channel": "Teams · тарас.лисенко" }, "meeting": { "time": "11:00", "durationMin": 45, "place": "Кімната керівника", "agenda": "Прогрес цілей, що прибрати, що посилити до дня 90." } },
+    { "id": "w4-reflect", "worldId": "w4", "type": "reading", "c4": "culture", "icon": "manager_star", "title": "Рефлексія 60 днів", "summary": "Коротка нотатка дає третю зірку не гірше за підпис керівника.", "dueDay": 60, "reminderDay": 58, "hint": "Два речення: що я вже вмію сама і де мені ще потрібен buddy.", "expert": { "name": "Тарас Лисенко", "role": "Керівник", "channel": "Teams · тарас.лисенко" }, "paragraphs": ["Рефлексія не звіт. Напиши, що здивувало в роботі зміни або команди і яке одне прохання ти ще не озвучила.", "Третя зірка зʼявляється або з цієї нотатки, або коли buddy чи керівник підтвердить якість у кабінеті HR."] },
+
+    { "id": "w5-buddy-9", "worldId": "w5", "type": "meeting", "buddyWeekly": true, "week": 9, "c4": "connection", "icon": "buddy", "title": "Buddy · тиждень 9", "summary": "Девʼята зустріч. До демо-дня лишається час зібрати історію.", "dueDay": 61, "reminderDay": 60, "hint": "Історія демо-дня: проблема, що зробила, що змінилось для команди або смаку.", "expert": { "name": "Наталія Гриценко", "role": "Buddy", "channel": "Teams · наталія.гриценко" }, "meeting": { "time": "16:00", "durationMin": 30, "place": "Кімната або онлайн", "agenda": "Каркас демо-дня." } },
+    { "id": "w5-buddy-10", "worldId": "w5", "type": "meeting", "buddyWeekly": true, "week": 10, "c4": "connection", "icon": "buddy", "title": "Buddy · тиждень 10", "summary": "Десята зустріч.", "dueDay": 68, "reminderDay": 67, "hint": "Порепетируй демо вголос. Дванадцять хвилин, не сорок.", "expert": { "name": "Наталія Гриценко", "role": "Buddy", "channel": "Teams · наталія.гриценко" }, "meeting": { "time": "16:00", "durationMin": 30, "place": "Кімната або онлайн", "agenda": "Репетиція демо." } },
+    { "id": "w5-buddy-11", "worldId": "w5", "type": "meeting", "buddyWeekly": true, "week": 11, "c4": "connection", "icon": "buddy", "title": "Buddy · тиждень 11", "summary": "Одинадцята зустріч.", "dueDay": 75, "reminderDay": 74, "hint": "Запитай, чи buddy ще потрібен після дня 90 і в якому ритмі.", "expert": { "name": "Наталія Гриценко", "role": "Buddy", "channel": "Teams · наталія.гриценко" }, "meeting": { "time": "16:00", "durationMin": 30, "place": "Кімната або онлайн", "agenda": "Як зміниться підтримка після випробувального." } },
+    { "id": "w5-buddy-12", "worldId": "w5", "type": "meeting", "buddyWeekly": true, "week": 12, "c4": "connection", "icon": "buddy", "title": "Buddy · тиждень 12", "summary": "Дванадцята зустріч. Лічильник на профілі має зійтись.", "dueDay": 82, "reminderDay": 81, "hint": "Подякуй конкретно: яка розмова зекономила тобі тиждень.", "expert": { "name": "Наталія Гриценко", "role": "Buddy", "channel": "Teams · наталія.гриценко" }, "meeting": { "time": "16:00", "durationMin": 30, "place": "Кімната або онлайн", "agenda": "Підсумок buddy-серії і подальший ритм." } },
+    { "id": "w5-demo", "worldId": "w5", "type": "meeting", "c4": "clarification", "icon": "key_event", "title": "Демо-день", "summary": "Коротко показати, що зроблено за випробувальний.", "dueDay": 88, "reminderDay": 84, "hint": "Один результат, один урок зі зміни або дегустації, одне прохання на наступний квартал.", "expert": { "name": "Тарас Лисенко", "role": "Керівник", "channel": "Teams · тарас.лисенко" }, "meeting": { "time": "15:00", "durationMin": 60, "place": "Кімната команди", "agenda": "12 хвилин історії + питання команди. Не захист диплома." } },
+    { "id": "w5-pulse-90", "worldId": "w5", "type": "pulse", "wave": "90", "c4": "culture", "icon": "checkin", "title": "Пульс: день 90", "summary": "Знову три осі. Порівняння з днем 30 бачить HR, не стрічка колег.", "dueDay": 90, "reminderDay": 88, "hint": "Чесна двійка корисніша за ввічливу пʼятірку.", "expert": { "name": "Катерина Литвин", "role": "HR-партнерка", "channel": "Teams · катерина.литвин" }, "meeting": { "time": "09:30", "durationMin": 15, "place": "Форма в цьому порталі", "agenda": "Пульс 90 днів." } },
+    { "id": "w5-checkin-90", "worldId": "w5", "type": "meeting", "c4": "clarification", "icon": "manager_star", "title": "Check-in 90", "summary": "Рішення про завершення випробувального і наступний ритм.", "dueDay": 90, "reminderDay": 87, "hint": "Запитай прямо, які очікування змінюються з наступного понеділка.", "expert": { "name": "Тарас Лисенко", "role": "Керівник", "channel": "Teams · тарас.лисенко" }, "meeting": { "time": "11:00", "durationMin": 45, "place": "Кімната керівника", "agenda": "Підсумок випробувального, рішення, ритм 1:1 далі." } },
+    { "id": "w5-next", "worldId": "w5", "type": "checklist", "c4": "clarification", "icon": "first_project", "title": "Цілі після випробувального", "summary": "Наступний квартал без режим «доведіть, що ви наш».", "dueDay": 92, "reminderDay": 90, "hint": "Залиш одну ціль, яка служить команді, не портфоліо.", "expert": { "name": "Тарас Лисенко", "role": "Керівник", "channel": "Teams · тарас.лисенко" }, "items": ["Записати цілі наступного кварталу", "Домовитись про ритм 1:1", "Вирішити, чи buddy лишається в легшому форматі"] },
+    { "id": "w5-bonus", "worldId": "w5", "type": "match3", "bonus": true, "c4": "culture", "icon": "task", "title": "Бонус: Фінальна коробка", "summary": "Святкова лінія після демо. Програш нічого не забирає.", "dueDay": 92, "hint": "Ціль вища, ходів стільки ж. Можна перезапустити без втрати серії.", "expert": { "name": "Пралінка", "role": "Гід порталу", "channel": "Вона живе на мапі" }, "match": { "target": 500, "moves": 18 } },
+
+    { "id": "h-pulse-365", "worldId": "horizon", "type": "pulse", "wave": "365", "unlockDay": 365, "c4": "culture", "icon": "checkin", "title": "Пульс: рік у компанії", "summary": "Та сама трійця осей через рік. На мапі це горизонт, не сьомий світ.", "dueDay": 365, "reminderDay": 360, "hint": "Річний пульс потрібен HR, щоб бачити, чи адаптація тримається, а не лише старт.", "expert": { "name": "Катерина Литвин", "role": "HR-партнерка", "channel": "Teams · катерина.литвин" }, "meeting": { "time": "10:00", "durationMin": 15, "place": "Форма в цьому порталі", "agenda": "Пульс 365 днів: інструменти, продуктивність, культура." } }
+  ],
+  "extraEvents": [
+    { "id": "checkin-120", "day": 120, "time": "11:00", "durationMin": 45, "title": "Check-in 120 днів", "place": "Кімната керівника", "icon": "checkin", "agenda": "Щомісячний check-in із серії на пів року." },
+    { "id": "checkin-150", "day": 150, "time": "11:00", "durationMin": 45, "title": "Check-in 150 днів", "place": "Кімната керівника", "icon": "checkin", "agenda": "Щомісячний check-in із серії на пів року." },
+    { "id": "checkin-180", "day": 180, "time": "11:00", "durationMin": 45, "title": "Check-in 180 днів", "place": "Кімната керівника", "icon": "checkin", "agenda": "Останній із шести щомісячних check-in після старту." }
+  ],
+  "people": [
+    { "id": "taras", "kind": "manager", "name": "Тарас Лисенко", "role": "Керівник маркетингу", "department": "Маркетинг", "site": "Київ" },
+    { "id": "petro", "kind": "manager", "name": "Петро Данилюк", "role": "Керівник зміни", "department": "Виробництво", "site": "Вінниця" },
+    { "id": "halyna", "kind": "manager", "name": "Галина Мороз", "role": "Директорка з продажів", "department": "Продажі", "site": "Київ" },
+    { "id": "iryna", "kind": "manager", "name": "Ірина Палій", "role": "Керівниця якості", "department": "Якість", "site": "Київ" },
+    { "id": "natalia", "kind": "buddy", "name": "Наталія Гриценко", "role": "Бренд-менеджерка", "department": "Маркетинг", "site": "Київ" },
+    { "id": "oksana", "kind": "buddy", "name": "Оксана Романюк", "role": "Змінна наставниця", "department": "Виробництво", "site": "Вінниця" },
+    { "id": "denys", "kind": "buddy", "name": "Денис Кравчук", "role": "Аналітик", "department": "Цифрові продукти", "site": "Київ" },
+    {
+      "id": "olena",
+      "kind": "hire",
+      "name": "Олена Коваль",
+      "role": "Бренд-менеджерка",
+      "department": "Маркетинг",
+      "site": "Київ, офіс",
+      "startDate": "2026-10-06",
+      "buddyId": "natalia",
+      "managerId": "taras",
+      "avatar": "#C73B62",
+      "absences": { "sick": ["2026-10-13"], "vacation": [] },
+      "seedStreak": { "count": 8, "lastActive": "2026-10-16" },
+      "managerLevel0": { "discuss_role": true, "assign_buddy": true, "networking": true, "schedule_checkins": true, "open_dialogue": true },
+      "pulses": {},
+      "seed": {
+        "done": ["w0-guide", "w0-docs", "w0-policy", "w0-video", "w0-quiz", "w0-buddy", "w0-questions", "w1-welcome", "w1-access", "w1-team", "w1-factory", "w1-safety", "w1-safety-quiz", "w2-product", "w2-quiz", "w2-buddy-1", "w2-workplace", "w2-processes", "w2-manager", "w2-goals"],
+        "ones": ["w0-docs", "w2-processes"],
+        "quiz": { "w0-quiz": 1, "w1-safety-quiz": 0.8, "w2-quiz": 0.9 },
+        "reflections": {
+          "w0-quiz": "Модель 4C розклала місяць по полицях: правила, ясність ролі, культура й люди.",
+          "w1-factory": "На лінії запамʼятався запах горіха і те, як зміна зупиняє крок, якщо сумнівається в якості.",
+          "w2-manager": "Домовились про один запуск смаку за 90 днів і одне питання на кожен тиждень, а не десяток."
+        }
+      }
+    },
+    {
+      "id": "andriy",
+      "kind": "hire",
+      "name": "Андрій Мельник",
+      "role": "Оператор лінії пакування",
+      "department": "Виробництво",
+      "site": "Вінниця, фабрика",
+      "startDate": "2026-09-07",
+      "buddyId": "oksana",
+      "managerId": "petro",
+      "avatar": "#2F8F55",
+      "managerLevel0": { "discuss_role": true, "assign_buddy": true, "networking": true, "schedule_checkins": true, "open_dialogue": true },
+      "pulses": { "30": { "tools": 4, "productivity": 3, "culture": 2, "comment": "На лінії все зрозуміло, в побутові чати зміни мене ще не кличуть." } },
+      "seed": { "done": ["w0-guide", "w0-docs", "w0-policy", "w0-video", "w0-quiz", "w0-buddy", "w0-questions", "w1-welcome", "w1-access", "w1-team", "w1-factory", "w1-safety", "w1-safety-quiz", "w2-product", "w2-quiz", "w2-buddy-1", "w2-workplace", "w2-processes", "w2-manager", "w2-goals", "w3-buddy-2", "w3-week2", "w3-network", "w3-buddy-3", "w3-culture", "w3-project", "w3-buddy-4", "w3-pulse-30", "w3-checkin-30", "w3-goals-90", "w4-buddy-5"] }
+    },
+    {
+      "id": "maria",
+      "kind": "hire",
+      "name": "Марія Шевченко",
+      "role": "Фахівчиня з якості",
+      "department": "Якість",
+      "site": "Київ, фабрика",
+      "startDate": "2026-10-12",
+      "buddyId": "natalia",
+      "managerId": "iryna",
+      "avatar": "#6E5AA8",
+      "managerLevel0": { "discuss_role": true, "assign_buddy": true, "networking": false, "schedule_checkins": true, "open_dialogue": true },
+      "pulses": {},
+      "seed": { "done": ["w0-guide", "w0-docs", "w0-policy", "w0-video", "w0-quiz", "w0-buddy", "w0-questions", "w1-welcome", "w1-access", "w1-team"] }
+    },
+    {
+      "id": "ihor",
+      "kind": "hire",
+      "name": "Ігор Бондар",
+      "role": "Аналітик даних",
+      "department": "Цифрові продукти",
+      "site": "Київ, офіс",
+      "startDate": "2026-11-02",
+      "buddyId": "denys",
+      "managerId": "taras",
+      "avatar": "#1F7A62",
+      "managerLevel0": { "discuss_role": true, "assign_buddy": false, "networking": false, "schedule_checkins": false, "open_dialogue": false },
+      "pulses": {},
+      "seed": { "done": ["w0-guide"], "ones": ["w0-guide"] }
+    },
+    {
+      "id": "sofia",
+      "kind": "hire",
+      "name": "Софія Ткаченко",
+      "role": "Менеджерка національних продажів",
+      "department": "Продажі",
+      "site": "Київ, офіс",
+      "startDate": "2026-08-17",
+      "buddyId": "oksana",
+      "managerId": "halyna",
+      "avatar": "#B86E1B",
+      "managerLevel0": { "discuss_role": true, "assign_buddy": true, "networking": true, "schedule_checkins": true, "open_dialogue": true },
+      "pulses": { "30": { "tools": 5, "productivity": 4, "culture": 4, "comment": "Доступи були в день 1, дегустація допомогла говорити з мережами." } },
+      "seed": { "done": ["w0-guide", "w0-docs", "w0-policy", "w0-video", "w0-quiz", "w0-buddy", "w0-questions", "w1-welcome", "w1-access", "w1-team", "w1-factory", "w1-safety", "w1-safety-quiz", "w2-product", "w2-quiz", "w2-buddy-1", "w2-workplace", "w2-processes", "w2-manager", "w2-goals", "w3-buddy-2", "w3-week2", "w3-network", "w3-buddy-3", "w3-culture", "w3-project", "w3-buddy-4", "w3-pulse-30", "w3-checkin-30", "w3-goals-90", "w4-buddy-5", "w4-buddy-6", "w4-buddy-7", "w4-buddy-8", "w4-training", "w4-help", "w4-directory", "w4-checkin-60", "w4-reflect", "w5-buddy-9"] }
+    },
+    {
+      "id": "dmytro",
+      "kind": "hire",
+      "name": "Дмитро Савчук",
+      "role": "Інженер-технолог",
+      "department": "Виробництво",
+      "site": "Кременчук, фабрика",
+      "startDate": "2025-10-20",
+      "buddyId": "oksana",
+      "managerId": "petro",
+      "avatar": "#8E4A2F",
+      "managerLevel0": { "discuss_role": true, "assign_buddy": true, "networking": true, "schedule_checkins": true, "open_dialogue": true },
+      "pulses": {
+        "30": { "tools": 4, "productivity": 4, "culture": 5, "comment": "Зміна прийняла швидко." },
+        "90": { "tools": 4, "productivity": 5, "culture": 4, "comment": "Бракувало єдиного довідника рецептур." },
+        "365": { "tools": 4, "productivity": 5, "culture": 5, "comment": "Рік потому культура зміни досі головна опора." }
+      },
+      "seed": { "done": "*" }
+    }
+  ],
+  "acquaintances": [
+    { "id": "acq-solomia", "name": "Соломія Верес", "role": "Технолог дегустацій", "site": "Київ", "prompt": "Попроси 15 хвилин: як вона записує нотатку смаку, щоб її зрозуміла і зміна, і бренд." },
+    { "id": "acq-marko", "name": "Марко Діденко", "role": "ІТ-підтримка майданчика", "site": "Київ", "prompt": "Уточни, куди писати, якщо перепустка або пошта мовчать. Це знімає половину тривоги дня 1." },
+    { "id": "acq-oleg", "name": "Олег Савченко", "role": "Кадровий супровід", "site": "Київ", "prompt": "Запитай, який документ люди найчастіше забувають до кінця місяця." },
+    { "id": "acq-katya", "name": "Катерина Литвин", "role": "HR-партнерка адаптації", "site": "Київ", "prompt": "Розкажи, який крок мапи здається штучним. Вона збирає це для когорти, не для догани." },
+    { "id": "acq-shift", "name": "Лариса Козак", "role": "Майстриня зміни", "site": "Вінниця", "prompt": "Запитай, яке питання новачка їй найприємніше чути на лінії." }
+  ],
+  "dailyQuizzes": [
+    { "id": "dq1", "q": "Торт, через який Roshen часто впізнають?", "choices": ["«Київський»", "«Медовик» із ринку", "Кекс до чаю"], "answer": 0 },
+    { "id": "dq2", "q": "Яка категорія є в портфелі компанії?", "choices": ["Лише морозиво", "Шоколад, цукерки, торти, печиво, карамель", "Лише кава"], "answer": 1 },
+    { "id": "dq3", "q": "Де працюють українські фабрики Roshen?", "choices": ["Київ, Вінниця, Кременчук", "Лише за кордоном", "Лише в одному цеху"], "answer": 0 },
+    { "id": "dq4", "q": "Що зробити з сумнівним зразком?", "choices": ["Сказати майстру зміни", "Спробувати ще раз мовчки", "Викласти в сторіз"], "answer": 0 },
+    { "id": "dq5", "q": "Навіщо описувати смак словами, а не «смачно»?", "choices": ["Так довше триває нарада", "Щоб зміна і бренд говорили про одне й те саме", "Цього вимагає перепустка"], "answer": 1 },
+    { "id": "dq6", "q": "Buddy потрібен насамперед щоб", "choices": ["Вести табель", "Дати контекст, якого немає в політиці", "Замінити керівника назавжди"], "answer": 1 }
+  ]
+}
