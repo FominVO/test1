@@ -40,14 +40,11 @@ function WorldBand({ world, worlds, friendId, setFriendId, onOpen, act, content,
   const points = layout(world.levels);
   const prev = world.index > 0 ? worlds[world.index - 1] : null;
   const artUrl = worldArtFor(world.id);
-  const stageTop = world.unlocked ? 132 : 214;
-  const height = stageTop + Math.max(640, points.length * 132);
   const roadId = `road-${world.id}`;
   const d = curveThrough(points);
   return (
-    <section className={`world-band ${world.unlocked ? '' : 'is-locked'}`} data-world={world.id} style={{ '--zone': world.accent, '--stage-top': `${stageTop}px`, '--stack': 8 - world.index, height: `${height}px` }} aria-labelledby={`world-${world.id}`}>
+    <section className={`world-band ${world.unlocked ? '' : 'is-locked'}`} data-world={world.id} style={{ '--zone': world.accent, '--stack': 8 - world.index }} aria-labelledby={`world-${world.id}`}>
       <img className="band-art" src={artUrl} alt="" />
-      <div className="band-fade" aria-hidden="true" />
       <header className="world-plaque">
         <p className="eyebrow">{world.kicker}</p>
         <h2 id={`world-${world.id}`}>{world.title}</h2>
@@ -66,7 +63,11 @@ function WorldBand({ world, worlds, friendId, setFriendId, onOpen, act, content,
               <stop offset="0.55" stopColor="#fff1c9" />
               <stop offset="1" stopColor="#8a5418" />
             </linearGradient>
+            <filter id={`${roadId}-glow`} x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="1.6" />
+            </filter>
           </defs>
+          <path className="road-glow" pathLength="100" d={d} filter={`url(#${roadId}-glow)`} />
           <path className="road-gold" pathLength="100" d={d} />
           <path className="road-body" pathLength="100" d={d} stroke={`url(#${roadId})`} />
           <path className="road-dots" pathLength="100" d={d} />
@@ -155,7 +156,7 @@ function layout(levels) {
     const t = count === 1 ? 0.5 : index / (count - 1);
     return {
       ...level,
-      y: 86 - t * 72,
+      y: 92 - t * 84,
       x: 50 + Math.sin(t * Math.PI * 2 + 0.35) * 6,
     };
   });

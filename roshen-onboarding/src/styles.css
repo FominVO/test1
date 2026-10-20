@@ -267,9 +267,12 @@ h2, h3, .wordmark { font-family: var(--display); letter-spacing: -0.03em; }
 .world-band {
   position: relative;
   z-index: var(--stack, 1);
-  margin-top: -80px;
+  width: 100%;
+  aspect-ratio: 1080 / 1906;
+  margin-top: -36px;
   overflow: hidden;
   background: #1a120e;
+  container-type: inline-size;
 }
 .map-column > :last-child { margin-top: 0; }
 .band-art {
@@ -278,22 +281,15 @@ h2, h3, .wordmark { font-family: var(--display); letter-spacing: -0.03em; }
   width: 100%;
   height: 100%;
   max-width: none;
-  object-fit: cover;
-  object-position: center center;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 88px, #000 100%);
-  mask-image: linear-gradient(to bottom, transparent 0, #000 88px, #000 100%);
+  object-fit: contain;
+  object-position: center top;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 36px, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 36px, #000 100%);
 }
-.map-column > :last-child .band-art,
+.map-column > .world-band:last-of-type .band-art,
 .horizon-bg {
   -webkit-mask-image: none;
   mask-image: none;
-}
-.band-fade {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba(13, 15, 23, 0.18), transparent 140px, transparent calc(100% - 64px), rgba(13, 15, 23, 0.16));
 }
 .world-plaque, .gate {
   position: absolute;
@@ -312,11 +308,13 @@ h2, h3, .wordmark { font-family: var(--display); letter-spacing: -0.03em; }
 .world-plaque { top: 12px; }
 .world-plaque h2, .world-plaque p { color: #fffaf0; }
 .world-plaque .eyebrow, .world-plaque .quiet { color: #fee597; }
-.gate { top: 128px; background: rgba(13, 15, 23, 0.72); }
-.path-stage { position: absolute; left: 0; right: 0; top: var(--stage-top, 132px); bottom: 8px; z-index: 2; }
+.gate { top: 108px; background: rgba(13, 15, 23, 0.72); }
+.path-stage { position: absolute; left: 0; right: 0; top: 118px; bottom: 28px; z-index: 2; }
+.world-band.is-locked .path-stage { top: 168px; }
 .world-band.is-locked .node { filter: grayscale(0.2) saturate(0.85); }
 .trail { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
 .trail path { fill: none; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.trail .road-glow { stroke: rgba(255, 244, 214, 0.9); stroke-width: 18; }
 .trail .road-gold { stroke: #fee597; stroke-width: 46; }
 .trail .road-body { stroke-width: 32; }
 .trail .road-dots { stroke: #fff6dc; stroke-width: 4; stroke-dasharray: 0.15 2.1; }
@@ -326,8 +324,8 @@ h2, h3, .wordmark { font-family: var(--display); letter-spacing: -0.03em; }
   position: absolute;
   left: 0;
   top: 0;
-  width: 72px;
-  height: 72px;
+  width: clamp(36px, 9.2cqw, 60px);
+  height: clamp(36px, 9.2cqw, 60px);
   transform: translate(-50%, -50%);
   border-radius: 50%;
   border: 3px solid #fff8ea;
@@ -386,13 +384,13 @@ h2, h3, .wordmark { font-family: var(--display); letter-spacing: -0.03em; }
   font-weight: 700;
   line-height: 1.25;
   color: var(--ink);
-  box-shadow: 0 6px 14px rgba(13, 15, 23, 0.28);
+  box-shadow: 0 0 0 5px rgba(255, 248, 236, 0.28), 0 8px 16px rgba(13, 15, 23, 0.28);
 }
 .node-label.is-right { left: 48px; text-align: left; }
 .node-label.is-left { right: 48px; text-align: right; }
 .stars {
   position: absolute;
-  top: 42px;
+  top: calc(clamp(36px, 9.2cqw, 60px) / 2 - 4px);
   left: 0;
   display: flex;
   gap: 2px;
@@ -400,7 +398,7 @@ h2, h3, .wordmark { font-family: var(--display); letter-spacing: -0.03em; }
   transform: translateX(-50%);
   margin: 0;
 }
-.stars svg { width: 16px; height: 16px; }
+.stars svg { width: 13px; height: 13px; }
 .stars .on { fill: #8a6a2f; }
 .stars .off { fill: rgba(13, 15, 23, 0.18); }
 .friend-stack { position: absolute; top: -46px; left: 0; display: flex; transform: translateX(-50%); }
@@ -657,10 +655,8 @@ textarea, input[type="date"], input[type="file"] { width: 100%; padding: 8px; bo
   .topbar { flex-wrap: wrap; }
   .stats { width: 100%; }
   .brand-logo { width: 112px; }
-  .node { width: 64px; height: 64px; }
   .node-label { width: 92px; font-size: 11px; }
-  .node-label.is-right { left: 42px; }
-  .node-label.is-left { right: 42px; }
-  .stars { top: 36px; }
+  .node-label.is-right { left: 28px; }
+  .node-label.is-left { right: 28px; }
   .hero-card { flex-direction: column; }
 }
