@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { assemble, claimDaily, dailyOffer, formatLong } from './logic.js';
 import { useGame } from './store.jsx';
-import { Art, Confetti, Dialog, Stars, candyLabel } from './ui.jsx';
+import { Art, Confetti, Dialog, RoshenLogo, Stars, candyLabel } from './ui.jsx';
+import { worldArtFor } from './worldArt.js';
 import { HrView } from './views/HrView.jsx';
 import { LevelSheet } from './views/LevelSheet.jsx';
 import { MapView } from './views/MapView.jsx';
@@ -26,7 +27,13 @@ function useRoute() {
   };
   const [route, setRoute] = useState(read);
   useEffect(() => {
-    const onHash = () => setRoute(read());
+    const onHash = () => {
+      const next = read();
+      setRoute((prev) => {
+        if (prev.view !== next.view) window.scrollTo(0, 0);
+        return next;
+      });
+    };
     window.addEventListener('hashchange', onHash);
     if (!window.location.hash) window.location.hash = '#/map';
     return () => window.removeEventListener('hashchange', onHash);
@@ -41,6 +48,17 @@ export function App() {
   const game = useGame();
   const route = useRoute();
   const [dailyOpen, setDailyOpen] = useState(false);
+  const [splashOn, setSplashOn] = useState(() => {
+    try {
+      return sessionStorage.getItem('roshen-splash') !== '1';
+    } catch {
+      return true;
+    }
+  });
+  function closeSplash() {
+    try { sessionStorage.setItem('roshen-splash', '1'); } catch { /* private mode */ }
+    setSplashOn(false);
+  }
   const model = useMemo(
     () => (game.content && game.rewards && game.state ? assemble(game.content, game.rewards, game.state) : null),
     [game.content, game.rewards, game.state],
@@ -56,24 +74,41 @@ export function App() {
   }
 
   if (game.error) {
-    return <main className="boot"><p>Не вдалося відкрити дані: {game.error}</p></main>;
+    return (
+      <main className="boot">
+        <RoshenLogo className="brand-logo" />
+        <p>Не вдалося відкрити дані: {game.error}</p>
+      </main>
+    );
   }
-  if (!model) return <main className="boot"><p>Збираємо мапу адаптації…</p></main>;
+  if (!model) {
+    return (
+      <main className="boot splash-boot">
+        <RoshenLogo className="splash-logo" />
+        <p className="splash-word">Адаптація</p>
+        <p>Збираємо мапу…</p>
+      </main>
+    );
+  }
 
   const level = findLevel(model, route.levelId);
   const toast = game.state.toast;
+  const hereWorld = model.worlds.find((world) => world.levels.some((item) => item.current));
+  const backdrop = worldArtFor(hereWorld?.id);
 
   return (
     <>
+      {backdrop && (
+        <div className="page-backdrop" aria-hidden="true">
+          <img src={backdrop} alt="" />
+        </div>
+      )}
       <a className="skip" href="#main">До змісту</a>
       <header className="topbar">
-        <div className="brand">
-          <span className="brand-mark" aria-hidden="true">R</span>
-          <div>
-            <p className="eyebrow">Портал адаптації</p>
-            <h1 className="wordmark">Roshen</h1>
-          </div>
-        </div>
+        <h1 className="brand">
+          <RoshenLogo />
+          <span className="wordmark">Адаптація</span>
+        </h1>
         <div className="stats" aria-label="Поточний рахунок">
           <span>{candyLabel(game.state.candies)}</span>
           <span>Серія {model.streak.count}</span>
@@ -108,6 +143,15 @@ export function App() {
           <button key={id} type="button" className={route.view === id ? 'is-on' : ''} onClick={() => route.go(id)}>{label}</button>
         ))}
       </nav>
+      {splashOn && (
+        <div className="splash" role="dialog" aria-modal="true" aria-label="Roshen. Адаптація">
+          <RoshenLogo className="splash-logo" />
+          <p className="splash-kicker">Портал адаптації</p>
+          <p className="splash-word">Адаптація</p>
+          <p className="splash-lead">Шлях від преонбордингу до дня 90. Без життів і без гонки.</p>
+          <button type="button" className="btn splash-go" autoFocus onClick={closeSplash}>На мапу</button>
+        </div>
+      )}
       <p className="reset-row">
         <button type="button" className="text-btn" onClick={game.reset}>Скинути демо в цьому браузері</button>
       </p>

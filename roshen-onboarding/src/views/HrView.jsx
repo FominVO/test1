@@ -3,7 +3,7 @@ import { addDays, computeStars, confirmStar, formatLong, giveBooster, pulseAvera
 import { PULSE_AXES } from '../logic.js';
 import { downloadBlob } from '../ui.jsx';
 
-const AXIS_COLOR = { tools: '#5C3A21', productivity: '#C4842A', culture: '#0F7A5C' };
+const AXIS_COLOR = { tools: '#0d0f17', productivity: '#8a6a2f', culture: '#4b5064' };
 
 export function HrView({ model, content, rewards, state, act, saveContent, saveRewards }) {
   const [selected, setSelected] = useState(content.currentUserId);
@@ -72,6 +72,7 @@ export function HrView({ model, content, rewards, state, act, saveContent, saveR
                 <span>
                   <b>{item.person.name}</b>
                   <span className="quiet">{item.person.role} · день {item.dayNum}</span>
+                  <span className="hire-meter" style={{ '--p': `${item.percent}%` }} />
                 </span>
                 <span className="hire-meta">
                   <span>{item.percent}%</span>
@@ -171,11 +172,14 @@ function PulseChart({ snapshots }) {
     ['365', '365 днів'],
   ];
   return (
-    <section className="card">
+    <section className="card chart-card">
       <h2>Пульс когорти</h2>
       <p className="quiet">Середнє за осями. Люди не бачать чужі відповіді на мапі.</p>
       <div className="chart-wrap">
         <svg viewBox="0 0 640 220" role="img" aria-label="Середні оцінки пульсу на 30, 90 і 365 день">
+          {[1, 2, 3, 4, 5].map((step) => (
+            <line key={step} x1="28" x2="616" y1={180 - step * 28} y2={180 - step * 28} stroke="#ece7dc" strokeWidth="1" />
+          ))}
           {waves.map(([wave, label], index) => {
             const averages = pulseAverages(
               snapshots.map((snap) => snap.person),
@@ -185,14 +189,14 @@ function PulseChart({ snapshots }) {
             const origin = 70 + index * 200;
             return (
               <g key={wave}>
-                <text x={origin + 36} y="208" textAnchor="middle" fill="#3A2418" fontSize="14">{label}</text>
+                <text x={origin + 36} y="208" textAnchor="middle" fill="#0d0f17" fontSize="14">{label}</text>
                 {averages.map((axis, axisIndex) => {
                   const height = axis.avg == null ? 0 : (axis.avg / 5) * 140;
                   const x = origin + axisIndex * 36;
                   return (
                     <g key={axis.axis}>
                       <rect x={x} y={180 - height} width="26" height={height} rx="6" fill={AXIS_COLOR[axis.axis]} />
-                      <text x={x + 13} y={172 - height} textAnchor="middle" fill="#3A2418" fontSize="12">
+                      <text x={x + 13} y={172 - height} textAnchor="middle" fill="#0d0f17" fontSize="12">
                         {axis.avg == null ? '—' : axis.avg.toFixed(1)}
                       </text>
                     </g>

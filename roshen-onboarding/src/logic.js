@@ -46,6 +46,89 @@ export function isWeekend(iso) {
   return day === 0 || day === 6;
 }
 
+const WORK_START_MIN = 9 * 60;
+const WORK_END_MIN = 18 * 60;
+
+/** Fixed dates from Article 73 of the Labor Code, month/day. Easter and Trinity are added per year. */
+const FIXED_HOLIDAYS = [
+  [1, 1],
+  [3, 8],
+  [5, 1],
+  [5, 8],
+  [6, 28],
+  [7, 15],
+  [8, 24],
+  [10, 1],
+  [12, 25],
+];
+
+const nonWorkingCache = new Map();
+
+export function orthodoxEaster(year) {
+  const a = year % 4;
+  const b = year % 7;
+  const c = year % 19;
+  const d = (19 * c + 15) % 30;
+  const e = (2 * a + 4 * b - d + 34) % 7;
+  const month = Math.floor((d + e + 114) / 31);
+  const day = ((d + e + 114) % 31) + 1;
+  const julian = new Date(Date.UTC(year, month - 1, day));
+  julian.setUTCDate(julian.getUTCDate() + 13);
+  return formatISO(julian);
+}
+
+export function nonWorkingDates(year) {
+  if (nonWorkingCache.has(year)) return nonWorkingCache.get(year);
+  const dates = new Set(FIXED_HOLIDAYS.map(([month, day]) => formatISO(new Date(Date.UTC(year, month - 1, day)))));
+  const easter = orthodoxEaster(year);
+  dates.add(easter);
+  dates.add(addDays(easter, 49));
+  for (const iso of [...dates].sort()) {
+    if (!isWeekend(iso)) continue;
+    let cursor = addDays(iso, 1);
+    while (isWeekend(cursor) || dates.has(cursor)) cursor = addDays(cursor, 1);
+    dates.add(cursor);
+  }
+  nonWorkingCache.set(year, dates);
+  return dates;
+}
+
+export function isNonWorkingDay(iso) {
+  if (isWeekend(iso)) return true;
+  const year = Number(iso.slice(0, 4));
+  return nonWorkingDates(year).has(iso) || nonWorkingDates(year - 1).has(iso);
+}
+
+export function sameWeekThursday(iso) {
+  const sinceMonday = (parseISO(iso).getUTCDay() + 6) % 7;
+  return addDays(iso, 3 - sinceMonday);
+}
+
+export function nearestWorkingDay(iso) {
+  if (!isNonWorkingDay(iso)) return iso;
+  for (let step = 1; step <= 21; step += 1) {
+    const earlier = addDays(iso, -step);
+    if (!isNonWorkingDay(earlier)) return earlier;
+    const later = addDays(iso, step);
+    if (!isNonWorkingDay(later)) return later;
+  }
+  return iso;
+}
+
+export function scheduleEventDate(iso, { buddyWeekly = false } = {}) {
+  return nearestWorkingDay(buddyWeekly ? sameWeekThursday(iso) : iso);
+}
+
+export function clampWorkingTime(time, durationMin) {
+  const match = /^(\d{1,2}):(\d{2})$/.exec(String(time || ''));
+  let minutes = match ? Number(match[1]) * 60 + Number(match[2]) : 10 * 60;
+  const duration = Math.max(0, Number(durationMin) || 0);
+  const span = Math.min(duration, WORK_END_MIN - WORK_START_MIN);
+  if (minutes < WORK_START_MIN) minutes = WORK_START_MIN;
+  if (minutes + span > WORK_END_MIN) minutes = WORK_END_MIN - span;
+  return `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`;
+}
+
 export function freezeReason(iso, absences, rules) {
   const streak = rules?.streak || {};
   if (streak.sickLeaveFreezes !== false && absences?.sick?.includes(iso)) return 'лікарняний';
@@ -196,18 +279,23 @@ export function currentLevelId(person, content, rewards, progress, asOf) {
   return sequence.at(-1)?.id || null;
 }
 
+function scheduledClock(rawTime, durationMin, buddyWeekly) {
+  return clampWorkingTime(buddyWeekly ? '16:00' : (rawTime || '10:00'), durationMin);
+}
+
 export function calendarEvents(person, content) {
   const events = [];
   for (const level of content.levels) {
     const scheduled = level.meeting || level.type === 'meeting' || level.type === 'pulse';
     if (!scheduled || typeof level.dueDay !== 'number') continue;
+    const durationMin = level.meeting?.durationMin || (level.type === 'pulse' ? 15 : 45);
     events.push({
       id: `${person.id}-${level.id}`,
       levelId: level.id,
       title: level.title,
-      date: dateForDay(person.startDate, level.dueDay),
-      time: level.meeting?.time || '10:00',
-      durationMin: level.meeting?.durationMin || (level.type === 'pulse' ? 15 : 45),
+      date: scheduleEventDate(dateForDay(person.startDate, level.dueDay), { buddyWeekly: Boolean(level.buddyWeekly) }),
+      time: scheduledClock(level.meeting?.time, durationMin, level.buddyWeekly),
+      durationMin,
       place: level.meeting?.place || 'За домовленістю',
       icon: level.icon || 'meeting',
       agenda: level.meeting?.agenda || level.summary || '',
@@ -218,8 +306,8 @@ export function calendarEvents(person, content) {
       id: `${person.id}-${extra.id}`,
       levelId: null,
       title: extra.title,
-      date: dateForDay(person.startDate, extra.day),
-      time: extra.time,
+      date: scheduleEventDate(dateForDay(person.startDate, extra.day)),
+      time: scheduledClock(extra.time, extra.durationMin, false),
       durationMin: extra.durationMin,
       place: extra.place,
       icon: extra.icon || 'checkin',

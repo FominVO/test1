@@ -7,6 +7,7 @@ import {
   addDays,
   assemble,
   buyItem,
+  calendarEvents,
   completeLevel,
   computeStars,
   createBoard,
@@ -14,7 +15,9 @@ import {
   findMatches,
   freshState,
   helpPerson,
+  isNonWorkingDay,
   isWorldUnlocked,
+  parseISO,
   resolveBoard,
   streakView,
   touchStreak,
@@ -195,4 +198,51 @@ function mulberry(seed) {
 
 test('date math stays on the civil calendar', () => {
   assert.equal(addDays('2026-10-06', 13), '2026-10-19');
+});
+
+test('Olena calendar skips New Year and keeps buddy meetings on Thursday at 16:00', () => {
+  const olena = content.people.find((person) => person.id === 'olena');
+  const events = calendarEvents(olena, content);
+  const byLevel = Object.fromEntries(events.filter((event) => event.levelId).map((event) => [event.levelId, event]));
+  assert.equal(byLevel['w5-demo'].date, '2026-12-31');
+  assert.equal(byLevel['w5-pulse-90'].date, '2027-01-04');
+  assert.equal(byLevel['w5-checkin-90'].date, '2027-01-04');
+  assert.equal(byLevel['h-pulse-365'].date, '2027-10-05');
+  const buddies = events.filter((event) => event.title.startsWith('Buddy ·'));
+  assert.equal(buddies.length, 12);
+  for (const event of buddies) {
+    assert.equal(parseISO(event.date).getUTCDay(), 4, `${event.title} ${event.date}`);
+    assert.equal(event.time, '16:00', event.title);
+  }
+  for (const event of events) {
+    const [hour, minute] = event.time.split(':').map(Number);
+    const start = hour * 60 + minute;
+    assert.ok(start >= 9 * 60 && start + event.durationMin <= 18 * 60, `${event.title} ${event.time}+${event.durationMin}`);
+  }
+});
+
+test('generated calendar never puts an event on a weekend', () => {
+  const olena = content.people.find((person) => person.id === 'olena');
+  for (const person of content.people.filter((item) => item.kind === 'hire')) {
+    for (const event of calendarEvents(person, content)) {
+      const weekday = parseISO(event.date).getUTCDay();
+      assert.ok(weekday >= 1 && weekday <= 5, `${person.id} ${event.title} ${event.date}`);
+      assert.equal(isNonWorkingDay(event.date), false, `${person.id} ${event.title} ${event.date}`);
+    }
+  }
+  for (let shift = 0; shift < 14; shift += 1) {
+    const person = { ...olena, id: `shift-${shift}`, startDate: addDays(olena.startDate, shift) };
+    for (const event of calendarEvents(person, content)) {
+      assert.equal(isNonWorkingDay(event.date), false, `start+${shift} ${event.title} ${event.date}`);
+    }
+  }
+});
+
+test('public holidays include 1 January and a transferred Easter Monday', () => {
+  assert.equal(isNonWorkingDay('2027-01-01'), true);
+  assert.equal(isNonWorkingDay('2026-12-25'), true);
+  assert.equal(isNonWorkingDay('2026-04-12'), true);
+  assert.equal(isNonWorkingDay('2026-04-13'), true);
+  assert.equal(isNonWorkingDay('2026-12-31'), false);
+  assert.equal(isNonWorkingDay('2027-01-04'), false);
 });

@@ -1,14 +1,17 @@
 import { useMemo, useState } from 'react';
 import {
+  clampWorkingTime,
   completeLevel,
   computeStars,
   dateForDay,
   dayNumber,
   eventToIcs,
   formatLong,
+  formatWeekday,
   patchEntry,
   savePulse,
   saveReflection,
+  scheduleEventDate,
   useBooster,
 } from '../logic.js';
 import { Art, C4, Dialog, downloadBlob } from '../ui.jsx';
@@ -19,7 +22,12 @@ export function LevelSheet({ level, content, rewards, state, act, onClose }) {
   const me = content.people.find((person) => person.id === content.currentUserId);
   const asOf = state.asOfOverride || content.meta.asOf;
   const dayNum = dayNumber(me.startDate, asOf);
-  const icsDate = typeof level.dueDay === 'number' ? dateForDay(me.startDate, level.dueDay) : asOf;
+  const durationMin = level.meeting?.durationMin || (level.type === 'pulse' ? 15 : 30);
+  const nominalDate = typeof level.dueDay === 'number' ? dateForDay(me.startDate, level.dueDay) : asOf;
+  const icsDate = typeof level.dueDay === 'number'
+    ? scheduleEventDate(nominalDate, { buddyWeekly: Boolean(level.buddyWeekly) })
+    : asOf;
+  const eventTime = clampWorkingTime(level.buddyWeekly ? '16:00' : (level.meeting?.time || '10:00'), durationMin);
   const world = content.worlds.find((item) => item.id === level.worldId);
   const unlockLabel = level.worldId === 'horizon'
     ? formatLong(dateForDay(me.startDate, level.unlockDay || 365))
@@ -34,11 +42,11 @@ export function LevelSheet({ level, content, rewards, state, act, onClose }) {
     id: level.id,
     title: level.title,
     date: icsDate,
-    time: level.meeting?.time || '10:00',
-    durationMin: level.meeting?.durationMin || 30,
+    time: eventTime,
+    durationMin,
     place: level.meeting?.place || 'За домовленістю',
     agenda: level.meeting?.agenda || level.summary,
-  }), [level, icsDate]);
+  }), [level, icsDate, eventTime, durationMin]);
 
   function run(mutator) {
     const result = act(mutator);
@@ -176,7 +184,7 @@ export function LevelSheet({ level, content, rewards, state, act, onClose }) {
       )}
       {!level.locked && (level.type === 'meeting' || level.meeting) && (
         <div className="meeting-card">
-          <p><b>{level.meeting?.time || '10:00'}</b> · {level.meeting?.durationMin || 30} хв</p>
+          <p><b>{formatWeekday(event.date)} · {event.time}</b> · {event.durationMin} хв</p>
           <p>{level.meeting?.place}</p>
           <p>{level.meeting?.agenda || level.summary}</p>
           {event && (
