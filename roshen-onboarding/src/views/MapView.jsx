@@ -1,12 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Art, Stars, assetSrc, initials } from '../ui.jsx';
-import { useGame } from '../store.jsx';
+import { Art, Stars, initials } from '../ui.jsx';
 import { formatLong, helpPerson } from '../logic.js';
+import { worldArtFor } from '../worldArt.js';
 
 export function MapView({ model, onOpen, act, content, rewards }) {
-  const { manifest } = useGame();
-  const mapUrl = assetSrc(manifest, 'mapBackground');
-  const worldUrl = assetSrc(manifest, 'worldBackground');
   const [friendId, setFriendId] = useState(null);
 
   useEffect(() => {
@@ -31,7 +28,7 @@ export function MapView({ model, onOpen, act, content, rewards }) {
       </div>
       <div className="saga-column map-column">
         {model.worlds.map((world) => (
-          <WorldBand key={world.id} world={world} worlds={model.worlds} mapUrl={mapUrl} worldUrl={worldUrl} friendId={friendId} setFriendId={setFriendId} onOpen={onOpen} act={act} content={content} rewards={rewards} />
+          <WorldBand key={world.id} world={world} worlds={model.worlds} friendId={friendId} setFriendId={setFriendId} onOpen={onOpen} act={act} content={content} rewards={rewards} />
         ))}
         {model.horizon && <Horizon level={model.horizon} onOpen={onOpen} />}
       </div>
@@ -39,18 +36,17 @@ export function MapView({ model, onOpen, act, content, rewards }) {
   );
 }
 
-function WorldBand({ world, worlds, mapUrl, worldUrl, friendId, setFriendId, onOpen, act, content, rewards }) {
+function WorldBand({ world, worlds, friendId, setFriendId, onOpen, act, content, rewards }) {
   const points = layout(world.levels);
   const prev = world.index > 0 ? worlds[world.index - 1] : null;
-  const artUrl = world.index % 2 === 0 ? (mapUrl || worldUrl) : (worldUrl || mapUrl);
-  const slice = worlds.length <= 1 ? 50 : (world.index / (worlds.length - 1)) * 100;
+  const artUrl = worldArtFor(world.id);
   const stageTop = world.unlocked ? 132 : 214;
-  const height = stageTop + Math.max(520, points.length * 126);
+  const height = stageTop + Math.max(640, points.length * 132);
   const roadId = `road-${world.id}`;
   const d = curveThrough(points);
   return (
-    <section className={`world-band ${world.unlocked ? '' : 'is-locked'}`} style={{ '--zone': world.accent, '--stage-top': `${stageTop}px`, height: `${height}px` }} aria-labelledby={`world-${world.id}`}>
-      {artUrl && <img className="band-art" src={artUrl} alt="" style={{ objectPosition: `center ${slice}%` }} />}
+    <section className={`world-band ${world.unlocked ? '' : 'is-locked'}`} data-world={world.id} style={{ '--zone': world.accent, '--stage-top': `${stageTop}px`, '--stack': 8 - world.index, height: `${height}px` }} aria-labelledby={`world-${world.id}`}>
+      <img className="band-art" src={artUrl} alt="" />
       <div className="band-fade" aria-hidden="true" />
       <header className="world-plaque">
         <p className="eyebrow">{world.kicker}</p>
@@ -86,7 +82,7 @@ function WorldBand({ world, worlds, mapUrl, worldUrl, friendId, setFriendId, onO
 function Horizon({ level, onOpen }) {
   return (
     <section className="horizon">
-      <Art id="worldBackground" alt="" className="horizon-bg" />
+      <img className="horizon-bg" src={worldArtFor('w5')} alt="" />
       <div>
         <p className="eyebrow">Горизонт</p>
         <h2>Рік у компанії</h2>
@@ -160,7 +156,7 @@ function layout(levels) {
     return {
       ...level,
       y: 86 - t * 72,
-      x: 50 + Math.sin(t * Math.PI * 2 + 0.35) * 10,
+      x: 50 + Math.sin(t * Math.PI * 2 + 0.35) * 6,
     };
   });
   const placed = [];
