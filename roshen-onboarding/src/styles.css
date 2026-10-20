@@ -267,6 +267,8 @@ h2, h3, .wordmark { font-family: var(--display); letter-spacing: -0.03em; }
 .world-band {
   position: relative;
   z-index: var(--stack, 1);
+  display: flex;
+  flex-direction: column;
   width: 100%;
   aspect-ratio: 1080 / 1906;
   margin-top: -36px;
@@ -292,11 +294,10 @@ h2, h3, .wordmark { font-family: var(--display); letter-spacing: -0.03em; }
   mask-image: none;
 }
 .world-plaque, .gate {
-  position: absolute;
+  position: relative;
   z-index: 4;
-  left: 12px;
-  right: 12px;
-  margin: 0;
+  flex: none;
+  margin: 12px 12px 0;
   padding: 10px 14px;
   color: #fffaf0;
   background: rgba(13, 15, 23, 0.62);
@@ -305,12 +306,10 @@ h2, h3, .wordmark { font-family: var(--display); letter-spacing: -0.03em; }
   box-shadow: 0 10px 24px rgba(13, 15, 23, 0.35);
   backdrop-filter: blur(8px);
 }
-.world-plaque { top: 12px; }
 .world-plaque h2, .world-plaque p { color: #fffaf0; }
 .world-plaque .eyebrow, .world-plaque .quiet { color: #fee597; }
-.gate { top: 108px; background: rgba(13, 15, 23, 0.72); }
-.path-stage { position: absolute; left: 0; right: 0; top: 118px; bottom: 28px; z-index: 2; }
-.world-band.is-locked .path-stage { top: 168px; }
+.gate { background: rgba(13, 15, 23, 0.72); }
+.path-stage { position: relative; z-index: 2; flex: 1 1 auto; min-height: 0; margin: 20px 0 16px; }
 .world-band.is-locked .node { filter: grayscale(0.2) saturate(0.85); }
 .trail { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
 .trail path { fill: none; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }

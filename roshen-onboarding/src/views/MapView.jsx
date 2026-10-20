@@ -156,7 +156,7 @@ function layout(levels) {
     const t = count === 1 ? 0.5 : index / (count - 1);
     return {
       ...level,
-      y: 92 - t * 84,
+      y: 86 - t * 72,
       x: 50 + Math.sin(t * Math.PI * 2 + 0.35) * 6,
     };
   });
